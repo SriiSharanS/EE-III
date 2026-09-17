@@ -1,48 +1,162 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CodeEditor from '../components/CodeEditor';
-import EvaluationPanel from '../components/EvaluationPanel';
 import Navbar from '../components/Navbar';
-import ReviewPanel from '../components/ReviewPanel';
 import { mockProblems } from '../data/mockProblems';
-import type { Language } from '../types/problem';
 
 export default function CodingPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const problem = useMemo(() => {
     return mockProblems.find((item) => String(item.id) === id) ?? mockProblems[0];
   }, [id]);
 
-  const [language, setLanguage] = useState<Language>('Python');
-  const [testCaseIndex, setTestCaseIndex] = useState(0);
-  const [showEvaluation, setShowEvaluation] = useState(false);
-  const [showReview, setShowReview] = useState(false);
+  useEffect(() => {
+    setCode('');
+    setCustomInput(problem.exampleInput || '');
+    setOutput('');
+    setCompilerError('');
+    setActiveTab('input');
+    setActiveQuestionTab('description');
+  }, [problem.id]);
 
-  const runCode = () => {
-    console.log('Mock run result:', problem.testCases[testCaseIndex].input);
+  // Editor strictly starts empty ("") on problem entry
+  const [code, setCode] = useState('');
+  const [customInput, setCustomInput] = useState(problem.exampleInput || '');
+  const [output, setOutput] = useState('');
+  const [compilerError, setCompilerError] = useState('');
+  const [isRunning, setIsRunning] = useState(false);
+  const [activeTab, setActiveTab] = useState<'input' | 'output' | 'compiler'>('input');
+  const [activeQuestionTab, setActiveQuestionTab] = useState<'description' | 'examples' | 'constraints'>('description');
+
+  const handleRun = async () => {
+    if (!code.trim()) {
+      setCompilerError('COMPILATION ERROR\n\nEditor is empty. Please write your Java code first.');
+      setOutput('');
+      setActiveTab('compiler');
+      return;
+    }
+
+    setIsRunning(true);
+    setCompilerError('');
+    setOutput('');
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/run', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: code,
+          input: customInput,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned status ${response.status}`);
+      }
+
+      const result: {
+        success: boolean;
+        stage: 'compile' | 'runtime' | 'completed';
+        output: string;
+        error: string;
+      } = await response.json();
+
+      if (result.success) {
+        const out = result.output ? result.output : 'Program finished with no output.';
+        setOutput(out);
+        setCompilerError('');
+        setActiveTab('output');
+      } else {
+        if (result.stage === 'compile') {
+          setCompilerError(`COMPILATION ERROR\n\n${result.error}`);
+          setOutput('');
+          setActiveTab('compiler');
+        } else {
+          // Runtime error or timeout
+          setCompilerError(`RUNTIME ERROR\n\n${result.error}`);
+          setOutput(result.output || '');
+          setActiveTab('compiler');
+        }
+      }
+    } catch {
+      setCompilerError(
+        'Execution server is unavailable.\n\nStart the CodeAssess Java backend on port 8000.'
+      );
+      setOutput('');
+      setActiveTab('compiler');
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const handleReset = () => {
+    setCode('');
+    setOutput('');
+    setCompilerError('');
+    setActiveTab('input');
   };
 
   return (
     <div className="app-shell">
+      {/* Subtle ambient light */}
+      <div className="ambient-glow glow-top" aria-hidden="true" />
+
       <Navbar />
 
       <main className="coding-page">
+        {/* Coding Header */}
         <section className="page-head coding-head">
-          <div>
-            <span className="section-kicker">Assessment / Problem {problem.number}</span>
-            <h1>{problem.title}</h1>
+          <div className="coding-header-meta">
+            <span
+              className="section-kicker appear appear--soft"
+              style={{ '--d': '0.1s' } as React.CSSProperties}
+            >
+              Problem #{String(problem.number).padStart(2, '0')} • {problem.topic}
+            </span>
+            <h1
+              className="coding-problem-title appear appear--mask"
+              style={{ '--d': '0.2s' } as React.CSSProperties}
+            >
+              {problem.title}
+            </h1>
           </div>
-          <button className="back-to-list" onClick={() => navigate('/assessment')}>Back to Problems</button>
+
+          <div
+            className="appear appear--scale"
+            style={{ '--d': '0.3s' } as React.CSSProperties}
+          >
+            <button
+              type="button"
+              className="btn btn-ghost back-to-list"
+              onClick={() => navigate('/assessment')}
+            >
+              <svg viewBox="0 0 24 24" className="btn-back-icon" aria-hidden="true">
+                <path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Back to Problems</span>
+            </button>
+          </div>
         </section>
 
+        {/* 2-Column Coding Layout */}
         <section className="coding-layout">
-          <aside className="question-panel">
+          {/* Left Column: Problem Information */}
+          <aside
+            className="question-panel appear appear--soft"
+            style={{ '--d': '0.35s' } as React.CSSProperties}
+          >
             <div className="question-card-heading">
               <div>
                 <span className="problem-title-main">{problem.title}</span>
                 <div className="meta-row">
-                  <span className={`difficulty-badge difficulty-${problem.difficulty.toLowerCase()}`}>{problem.difficulty}</span>
+                  <span className={`difficulty-badge difficulty-${problem.difficulty.toLowerCase()}`}>
+                    <span className="badge-dot"></span>
+                    {problem.difficulty}
+                  </span>
                   <span className="meta-divider">•</span>
                   <span className="marks-line">Max Marks: {problem.marks}</span>
                 </div>
@@ -50,93 +164,115 @@ export default function CodingPage() {
             </div>
 
             <div className="tabs">
-              <span className="tab active">Description</span>
-              <span className="tab">Examples</span>
-              <span className="tab">Constraints</span>
+              <button
+                type="button"
+                className={`tab ${activeQuestionTab === 'description' ? 'active' : ''}`}
+                onClick={() => setActiveQuestionTab('description')}
+              >
+                Description
+              </button>
+              <button
+                type="button"
+                className={`tab ${activeQuestionTab === 'examples' ? 'active' : ''}`}
+                onClick={() => setActiveQuestionTab('examples')}
+              >
+                Examples
+              </button>
+              <button
+                type="button"
+                className={`tab ${activeQuestionTab === 'constraints' ? 'active' : ''}`}
+                onClick={() => setActiveQuestionTab('constraints')}
+              >
+                Constraints
+              </button>
             </div>
 
             <div className="question-scroll">
-              <div className="description-block">
-                <div className="question-section-label">Description</div>
-                <p>{problem.description}</p>
-              </div>
+              {activeQuestionTab === 'description' && (
+                <>
+                  <div className="description-block">
+                    <div className="question-section-label">Description</div>
+                    <p>{problem.description}</p>
+                  </div>
 
-              <div className="description-block">
-                <div className="question-section-label">Input</div>
-                <pre>{problem.input}</pre>
-              </div>
+                  <div className="description-block">
+                    <div className="question-section-label">Input Format</div>
+                    <pre>{problem.input}</pre>
+                  </div>
 
-              <div className="description-block">
-                <div className="question-section-label">Output</div>
-                <pre>{problem.output}</pre>
-              </div>
+                  <div className="description-block">
+                    <div className="question-section-label">Output Format</div>
+                    <pre>{problem.output}</pre>
+                  </div>
+                </>
+              )}
 
-              <div className="description-block">
-                <div className="question-section-label">Example Input</div>
-                <pre>{problem.exampleInput}</pre>
-              </div>
+              {activeQuestionTab === 'examples' && (
+                <>
+                  <div className="description-block">
+                    <div className="question-section-label">Example Input</div>
+                    <pre>{problem.exampleInput}</pre>
+                  </div>
 
-              <div className="description-block">
-                <div className="question-section-label">Example Output</div>
-                <pre>{problem.exampleOutput}</pre>
-              </div>
+                  <div className="description-block">
+                    <div className="question-section-label">Example Output</div>
+                    <pre>{problem.exampleOutput}</pre>
+                  </div>
 
-              <div className="description-block">
-                <div className="question-section-label">Constraints</div>
-                <pre>{problem.constraints}</pre>
-              </div>
+                  {problem.testCases && problem.testCases.length > 0 && (
+                    <div className="description-block">
+                      <div className="question-section-label">Sample Test Cases</div>
+                      {problem.testCases.map((tc, idx) => (
+                        <div key={idx} className="sample-tc-item">
+                          <div className="mini-label">Case #{idx + 1}</div>
+                          <div className="tc-grid">
+                            <div>
+                              <span className="tc-sublabel">Input:</span>
+                              <pre>{tc.input}</pre>
+                            </div>
+                            <div>
+                              <span className="tc-sublabel">Expected Output:</span>
+                              <pre>{tc.expected}</pre>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {activeQuestionTab === 'constraints' && (
+                <div className="description-block">
+                  <div className="question-section-label">Constraints</div>
+                  <pre>{problem.constraints}</pre>
+                </div>
+              )}
             </div>
           </aside>
 
-          <section className="editor-panel">
+          {/* Right Column: Monaco Code Editor + Custom Input / Output / Compiler Tabs */}
+          <section
+            className="editor-panel appear appear--soft"
+            style={{ '--d': '0.45s' } as React.CSSProperties}
+          >
             <CodeEditor
               problem={problem}
-              language={language}
-              onRun={runCode}
-              onSubmit={() => setShowEvaluation(true)}
-              onLanguageChange={(value) => setLanguage(value)}
+              code={code}
+              onChangeCode={setCode}
+              onRun={handleRun}
+              onReset={handleReset}
+              isRunning={isRunning}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              customInput={customInput}
+              onCustomInputChange={setCustomInput}
+              output={output}
+              compilerError={compilerError}
             />
           </section>
         </section>
-
-        <section className="bottom-case-panel">
-          <div className="cases-toolbar">
-            <button className="testcase-button selected" onClick={() => setTestCaseIndex(0)}>Test Case 1</button>
-            <button className="testcase-button" onClick={() => setTestCaseIndex(1)}>Test Case 2</button>
-          </div>
-          <div className="case-detail">
-            <div>
-              <span className="mini-label">Input:</span>
-              <pre>{problem.testCases[testCaseIndex].input}</pre>
-            </div>
-            <div>
-              <span className="mini-label">Expected:</span>
-              <pre>{problem.testCases[testCaseIndex].expected}</pre>
-            </div>
-          </div>
-        </section>
-
-        <section className="lower-output-panel">
-          <div className="output-panel-title">Output</div>
-          <div className="mock-output">
-            <span>Run your code to see the output.</span>
-          </div>
-        </section>
-
-        <ReviewPanel visible={showReview} />
       </main>
-
-      <EvaluationPanel
-        visible={showEvaluation}
-        onReview={() => {
-          setShowEvaluation(false);
-          setShowReview(true);
-        }}
-        onBack={() => {
-          setShowEvaluation(false);
-          navigate('/assessment');
-        }}
-      />
     </div>
   );
 }

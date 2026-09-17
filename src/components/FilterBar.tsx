@@ -11,8 +11,8 @@ interface FilterBarProps {
   onSearchChange: (search: string) => void;
 }
 
-const languages: Language[] = ['Python', 'Java', 'C', 'C++'];
-const difficulties = ['Easy', 'Medium', 'Hard'];
+const languages: Language[] = ['Java'];
+const difficulties = ['All', 'Easy', 'Medium', 'Hard'];
 const topics: Array<Topic | 'All Topics'> = [
   'All Topics',
   'Basics',
@@ -39,40 +39,73 @@ export default function FilterBar({
       <div className="filters-grid">
         <label className="filter-control">
           <span className="filter-label">Language</span>
-          <select value={language} onChange={(e) => onLanguageChange(e.target.value as Language)}>
-            {languages.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
+          <div className="select-wrap">
+            <select
+              value={language}
+              onChange={(e) => onLanguageChange(e.target.value as Language)}
+              className="filter-select"
+            >
+              {languages.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
         </label>
 
         <label className="filter-control">
           <span className="filter-label">Difficulty</span>
-          <select value={difficulty} onChange={(e) => onDifficultyChange(e.target.value)}>
-            <option>All</option>
-            {difficulties.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
+          <div className="select-wrap">
+            <select
+              value={difficulty}
+              onChange={(e) => onDifficultyChange(e.target.value)}
+              className="filter-select"
+            >
+              {difficulties.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
         </label>
 
         <label className="filter-control">
           <span className="filter-label">Topic</span>
-          <select value={topic} onChange={(e) => onTopicChange(e.target.value as Topic | 'All Topics')}>
-            {topics.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
+          <div className="select-wrap">
+            <select
+              value={topic}
+              onChange={(e) => onTopicChange(e.target.value as Topic | 'All Topics')}
+              className="filter-select"
+            >
+              {topics.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
         </label>
 
         <label className="filter-control search-control">
-          <span className="filter-label">Search</span>
-          <span className="search-input-wrap">
-            <svg viewBox="0 0 24 24" className="search-icon">
-              <path d="m18 18-4.2-4.2M16 11a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
+          <span className="filter-label">Search Query</span>
+          <div className="search-input-wrap">
+            <svg viewBox="0 0 24 24" className="search-icon" aria-hidden="true">
+              <path
+                d="m18 18-4.2-4.2M16 11a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
             </svg>
-            <input value={search} placeholder="Search problem" onChange={(e) => onSearchChange(e.target.value)} />
-          </span>
+            <input
+              className="filter-input"
+              value={search}
+              placeholder="Filter by title or topic..."
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+          </div>
         </label>
       </div>
     </section>

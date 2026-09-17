@@ -1,100 +1,160 @@
 import Editor from '@monaco-editor/react';
-import { useState } from 'react';
-import type { Language, Problem } from '../types/problem';
+import { useEffect, useRef, useState } from 'react';
+import type { Problem } from '../types/problem';
 
 interface CodeEditorProps {
   problem: Problem;
-  language: Language;
+  code: string;
+  onChangeCode: (code: string) => void;
   onRun: () => void;
-  onSubmit: () => void;
-  onLanguageChange: (language: Language) => void;
+  onReset: () => void;
+  isRunning: boolean;
+  activeTab: 'input' | 'output' | 'compiler';
+  onTabChange: (tab: 'input' | 'output' | 'compiler') => void;
+  customInput: string;
+  onCustomInputChange: (val: string) => void;
+  output: string;
+  compilerError: string;
 }
 
-const mapLanguageToMonaco = (language: Language) => {
-  return {
-    Python: 'python',
-    Java: 'java',
-    C: 'c',
-    'C++': 'cpp',
-  }[language] ?? 'python';
-};
-
 export default function CodeEditor({
-  problem,
-  language,
+  problem: _problem,
+  code,
+  onChangeCode,
   onRun,
-  onSubmit,
-  onLanguageChange,
+  onReset,
+  isRunning,
+  activeTab,
+  onTabChange,
+  customInput,
+  onCustomInputChange,
+  output,
+  compilerError,
 }: CodeEditorProps) {
-  const [code, setCode] = useState(problem.starterCode[language]);
   const [toastVisible, setToastVisible] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const toastTimeoutRef = useRef<number | null>(null);
 
-  const handleEditorMount = (editor: any) => {
-    const showCopyPasteDisabledMessage = () => {
-      setToastVisible(true);
-      window.setTimeout(() => setToastVisible(false), 1800);
-    };
-
-    editor.onContextMenu((event: any) => {
-      event.preventDefault?.();
-      showCopyPasteDisabledMessage();
-    });
-
-    editor.onMouseDown((event: any) => {
-      if (event && event.browserEvent && event.browserEvent.button === 2) {
-        showCopyPasteDisabledMessage();
-      }
-    });
-
-    editor.onKeyDown((event: any) => {
-      const key = event.key?.toLowerCase();
-      const isCopyPasteCut =
-        (event.ctrlKey || event.metaKey) && ['c', 'v', 'x'].includes(key);
-
-      if (isCopyPasteCut) {
-        event.preventDefault();
-        event.stopPropagation();
-        showCopyPasteDisabledMessage();
-      }
-    });
+  const showToast = () => {
+    if (toastTimeoutRef.current) {
+      window.clearTimeout(toastTimeoutRef.current);
+    }
+    setToastVisible(true);
+    toastTimeoutRef.current = window.setTimeout(() => {
+      setToastVisible(false);
+    }, 2000);
   };
 
-  const handleLanguageChange = (value: Language) => {
-    onLanguageChange(value);
-    setCode(problem.starterCode[value]);
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        window.clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleEditorMount = (editor: any, monaco: any) => {
+    // Intercept keyboard shortcuts in Monaco
+    editor.onKeyDown((event: any) => {
+      const browserEvent = event.browserEvent;
+      const key = browserEvent?.key?.toLowerCase();
+      const isCtrlOrCmd = event.ctrlKey || event.metaKey;
+
+      if (isCtrlOrCmd && ['c', 'v', 'x'].includes(key)) {
+        event.preventDefault();
+        event.stopPropagation();
+        showToast();
+      }
+    });
+
+    // Monaco command overrides
+    if (monaco) {
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => showToast());
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => showToast());
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX, () => showToast());
+    }
+
+    // Intercept native DOM events on editor container
+    const container = editor.getContainerDomNode();
+    if (container) {
+      const blockHandler = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showToast();
+      };
+
+      container.addEventListener('copy', blockHandler, true);
+      container.addEventListener('paste', blockHandler, true);
+      container.addEventListener('cut', blockHandler, true);
+      container.addEventListener('contextmenu', blockHandler, true);
+      container.addEventListener('drop', blockHandler, true);
+    }
+  };
+
+  const handleResetClick = () => {
+    if (code.trim().length > 0) {
+      setShowResetConfirm(true);
+    } else {
+      onReset();
+    }
+  };
+
+  const handleConfirmReset = () => {
+    setShowResetConfirm(false);
+    onChangeCode('');
+    onReset();
   };
 
   return (
     <section className="editor-wrap">
+      {/* Editor Topbar */}
       <div className="editor-topbar">
         <div className="language-group">
           <span className="language-label">Language:</span>
-          <select className="language-select" value={language} onChange={(e) => handleLanguageChange(e.target.value as Language)}>
-            <option>Python</option>
-            <option>Java</option>
-            <option>C</option>
-            <option>C++</option>
-          </select>
+          <div className="language-badge">Java</div>
         </div>
 
         <div className="editor-actions">
-          <button className="editor-action reset" onClick={() => setCode(problem.starterCode[language])}>Reset</button>
-          <button className="editor-action run" onClick={onRun}>Run</button>
-          <button className="editor-action submit" onClick={onSubmit}>Submit</button>
+          <button
+            type="button"
+            className="editor-action reset"
+            onClick={handleResetClick}
+            disabled={isRunning}
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            className={`editor-action run ${isRunning ? 'loading' : ''}`}
+            onClick={onRun}
+            disabled={isRunning}
+          >
+            {isRunning ? 'Running...' : 'Run'}
+          </button>
+          <div className="submit-wrapper" title="Evaluation will be enabled in the next phase.">
+            <button
+              type="button"
+              className="editor-action submit disabled"
+              disabled
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Monaco Editor Canvas */}
       <div className="editor-area">
         <Editor
-          height="380px"
-          language={mapLanguageToMonaco(language)}
+          height="420px"
+          language="java"
           value={code}
           theme="vs-dark"
           onMount={handleEditorMount}
-          onChange={(value) => setCode(value ?? '')}
+          onChange={(value) => onChangeCode(value ?? '')}
           options={{
             minimap: { enabled: false },
-            fontSize: 15,
+            fontSize: 14,
             lineNumbersMinChars: 3,
             wordWrap: 'on',
             automaticLayout: true,
@@ -102,50 +162,121 @@ export default function CodeEditor({
             smoothScrolling: true,
             contextmenu: false,
             selectOnLineNumbers: true,
-            glyphMargin: true,
+            glyphMargin: false,
             copyWithSyntaxHighlighting: false,
-            readOnly: false,
+            readOnly: isRunning,
             quickSuggestions: true,
             suggestOnTriggerCharacters: true,
             snippetSuggestions: 'inline',
             dragAndDrop: false,
             tabSize: 4,
-            fontFamily: 'JetBrains Mono, Consolas, monospace',
+            fontFamily: 'JetBrains Mono, Consolas, "Courier New", monospace',
             mouseWheelZoom: true,
-            padding: { top: 16, bottom: 16 },
+            padding: { top: 14, bottom: 14 },
           }}
         />
       </div>
 
+      {/* Clean Bottom Tabbed Panel */}
       <div className="bottom-panel">
         <div className="bottom-tabs">
-          <button className="bottom-tab active">Test Cases</button>
-          <button className="bottom-tab">Output</button>
-          <button className="bottom-tab">Compiler</button>
-          <button className="bottom-tab">Evaluation</button>
+          <button
+            type="button"
+            className={`bottom-tab ${activeTab === 'input' ? 'active' : ''}`}
+            onClick={() => onTabChange('input')}
+          >
+            CUSTOM INPUT
+          </button>
+          <button
+            type="button"
+            className={`bottom-tab ${activeTab === 'output' ? 'active' : ''}`}
+            onClick={() => onTabChange('output')}
+          >
+            OUTPUT
+          </button>
+          <button
+            type="button"
+            className={`bottom-tab ${activeTab === 'compiler' ? 'active' : ''}`}
+            onClick={() => onTabChange('compiler')}
+          >
+            COMPILER {compilerError ? '●' : ''}
+          </button>
         </div>
+
         <div className="bottom-content">
-          <div className="testcase-strip">
-            <div className="testcase-tab active">Test Case 1</div>
-            <div className="testcase-tab">Test Case 2</div>
-          </div>
-          <div className="testcase-output">
-            <div className="testcase-line">
-              <span className="testcase-label">Input:</span>
-              <pre>{problem.testCases[0].input}</pre>
+          {activeTab === 'input' && (
+            <div className="tab-pane custom-input-pane">
+              <label className="pane-label" htmlFor="custom-input-field">
+                Standard Input (stdin):
+              </label>
+              <textarea
+                id="custom-input-field"
+                className="custom-input-textarea"
+                placeholder="Enter input values here (passed to System.in)..."
+                value={customInput}
+                onChange={(e) => onCustomInputChange(e.target.value)}
+                rows={4}
+              />
             </div>
-            <div className="testcase-line">
-              <span className="testcase-label">Expected:</span>
-              <pre>{problem.testCases[0].expected}</pre>
+          )}
+
+          {activeTab === 'output' && (
+            <div className="tab-pane output-pane">
+              <div className="pane-header">
+                <span className="pane-label">Standard Output (stdout):</span>
+              </div>
+              <pre className="terminal-output">
+                {output ? output : <span className="text-muted-output">Run your code to see the output.</span>}
+              </pre>
             </div>
-          </div>
-          <div className="output-placeholder">Run your code to see the output.</div>
+          )}
+
+          {activeTab === 'compiler' && (
+            <div className="tab-pane compiler-pane">
+              <div className="pane-header">
+                <span className="pane-label">Compiler & Runtime Diagnostics:</span>
+              </div>
+              <pre className={`terminal-output ${compilerError ? 'error-log' : ''}`}>
+                {compilerError ? compilerError : <span className="text-muted-output">No compilation or runtime errors.</span>}
+              </pre>
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Copy / Paste Disabled Toast */}
       {toastVisible && (
-        <div className="copy-toast">
-          <span>Copy and Paste are disabled during assessment.</span>
+        <div className="copy-toast" role="alert">
+          <span className="toast-icon">⚠️</span>
+          <span>Copy, cut and paste are disabled during assessment.</span>
+        </div>
+      )}
+
+      {/* Reset Confirmation Modal */}
+      {showResetConfirm && (
+        <div className="modal-backdrop">
+          <div className="confirm-dialog" role="dialog" aria-labelledby="reset-dialog-title">
+            <h3 id="reset-dialog-title" className="dialog-title">Clear all code?</h3>
+            <p className="dialog-message">
+              This will remove all code currently written in the editor and reset execution output.
+            </p>
+            <div className="dialog-actions">
+              <button
+                type="button"
+                className="dialog-btn dialog-cancel"
+                onClick={() => setShowResetConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="dialog-btn dialog-clear"
+                onClick={handleConfirmReset}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>
