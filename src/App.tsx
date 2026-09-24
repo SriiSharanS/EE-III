@@ -1,6 +1,22 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { getPortalSession } from './auth';
 import AssessmentPage from './pages/AssessmentPage';
 import CodingPage from './pages/CodingPage';
+import LoginPage from './pages/LoginPage';
+
+function RequirePortalSession() {
+  const location = useLocation();
+
+  if (!getPortalSession()) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
+
+  return <Outlet />;
+}
+
+function PortalHome() {
+  return <Navigate to={getPortalSession() ? '/assessment' : '/login'} replace />;
+}
 
 export default function App() {
   return (
@@ -21,10 +37,16 @@ export default function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/assessment" replace />} />
-          <Route path="/assessment" element={<AssessmentPage />} />
-          <Route path="/code/:id" element={<CodingPage />} />
-          <Route path="*" element={<Navigate to="/assessment" replace />} />
+          <Route path="/" element={<PortalHome />} />
+          <Route
+            path="/login"
+            element={getPortalSession() ? <Navigate to="/assessment" replace /> : <LoginPage />}
+          />
+          <Route element={<RequirePortalSession />}>
+            <Route path="/assessment" element={<AssessmentPage />} />
+            <Route path="/code/:id" element={<CodingPage />} />
+          </Route>
+          <Route path="*" element={<PortalHome />} />
         </Routes>
       </BrowserRouter>
     </>

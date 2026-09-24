@@ -1,27 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { apiUrl } from '../api';
 import CodeEditor from '../components/CodeEditor';
 import Navbar from '../components/Navbar';
 import { mockProblems } from '../data/mockProblems';
+import type { Problem } from '../types/problem';
 
 export default function CodingPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const problem = useMemo(() => {
     return mockProblems.find((item) => String(item.id) === id) ?? mockProblems[0];
   }, [id]);
 
-  useEffect(() => {
-    setCode('');
-    setCustomInput(problem.exampleInput || '');
-    setOutput('');
-    setCompilerError('');
-    setActiveTab('input');
-    setActiveQuestionTab('description');
-  }, [problem.id]);
+  return <CodingWorkspace key={problem.id} problem={problem} />;
+}
 
-  // Editor strictly starts empty ("") on problem entry
+function CodingWorkspace({ problem }: { problem: Problem }) {
+  const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState(problem.exampleInput || '');
   const [output, setOutput] = useState('');
@@ -32,7 +28,7 @@ export default function CodingPage() {
 
   const handleRun = async () => {
     if (!code.trim()) {
-      setCompilerError('COMPILATION ERROR\n\nEditor is empty. Please write your Java code first.');
+      setCompilerError('Editor is empty. Please write your Java code first.');
       setOutput('');
       setActiveTab('compiler');
       return;
@@ -42,8 +38,10 @@ export default function CodingPage() {
     setCompilerError('');
     setOutput('');
 
+    let response: Response;
+
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/run', {
+      response = await fetch(apiUrl('/api/run'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,9 +51,24 @@ export default function CodingPage() {
           input: customInput,
         }),
       });
+    } catch {
+      setCompilerError(
+        'Execution server is unavailable.\n\nStart the CodeAssess Java backend on port 8000.'
+      );
+      setOutput('');
+      setActiveTab('compiler');
+      setIsRunning(false);
+      return;
+    }
 
+    try {
       if (!response.ok) {
-        throw new Error(`Server returned status ${response.status}`);
+        const responseText = await response.text();
+        setCompilerError(
+          responseText || `Execution server returned HTTP ${response.status}.`
+        );
+        setActiveTab('compiler');
+        return;
       }
 
       const result: {
@@ -72,20 +85,18 @@ export default function CodingPage() {
         setActiveTab('output');
       } else {
         if (result.stage === 'compile') {
-          setCompilerError(`COMPILATION ERROR\n\n${result.error}`);
+          setCompilerError(result.error || 'Compilation failed.');
           setOutput('');
           setActiveTab('compiler');
         } else {
           // Runtime error or timeout
-          setCompilerError(`RUNTIME ERROR\n\n${result.error}`);
+          setCompilerError(result.error || 'Runtime error occurred.');
           setOutput(result.output || '');
           setActiveTab('compiler');
         }
       }
     } catch {
-      setCompilerError(
-        'Execution server is unavailable.\n\nStart the CodeAssess Java backend on port 8000.'
-      );
+      setCompilerError('Execution server returned an invalid response.');
       setOutput('');
       setActiveTab('compiler');
     } finally {

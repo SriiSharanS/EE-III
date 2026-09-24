@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react';
+import Editor, { type OnMount } from '@monaco-editor/react';
 import { useEffect, useRef, useState } from 'react';
 import type { Problem } from '../types/problem';
 
@@ -18,7 +18,6 @@ interface CodeEditorProps {
 }
 
 export default function CodeEditor({
-  problem: _problem,
   code,
   onChangeCode,
   onRun,
@@ -53,9 +52,9 @@ export default function CodeEditor({
     };
   }, []);
 
-  const handleEditorMount = (editor: any, monaco: any) => {
+  const handleEditorMount: OnMount = (editor, monaco) => {
     // Intercept keyboard shortcuts in Monaco
-    editor.onKeyDown((event: any) => {
+    editor.onKeyDown((event) => {
       const browserEvent = event.browserEvent;
       const key = browserEvent?.key?.toLowerCase();
       const isCtrlOrCmd = event.ctrlKey || event.metaKey;
