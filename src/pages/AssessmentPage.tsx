@@ -6,7 +6,11 @@ import ProblemCard from '../components/ProblemCard';
 import { mockProblems } from '../data/mockProblems';
 import type { Language, Topic } from '../types/problem';
 
-export default function AssessmentPage() {
+export default function AssessmentPage({
+  attemptedProblemIds,
+}: {
+  attemptedProblemIds: ReadonlySet<number>;
+}) {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<Language>('Java');
   const [difficulty, setDifficulty] = useState('All');
@@ -181,7 +185,14 @@ export default function AssessmentPage() {
             </thead>
             <tbody>
               {filteredProblems.map((problem) => (
-                <ProblemCard key={problem.id} problem={problem} />
+                <ProblemCard
+                  key={problem.id}
+                  problem={
+                    attemptedProblemIds.has(problem.id)
+                      ? { ...problem, status: 'Attempted' }
+                      : problem
+                  }
+                />
               ))}
             </tbody>
           </table>

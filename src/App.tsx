@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { getPortalSession } from './auth';
 import AssessmentPage from './pages/AssessmentPage';
@@ -19,6 +20,14 @@ function PortalHome() {
 }
 
 export default function App() {
+  const [attemptedProblemIds, setAttemptedProblemIds] = useState<ReadonlySet<number>>(
+    () => new Set()
+  );
+
+  const markProblemAttempted = (problemId: number) => {
+    setAttemptedProblemIds((currentIds) => new Set(currentIds).add(problemId));
+  };
+
   return (
     <>
       <div className="video-background" aria-hidden="true">
@@ -43,8 +52,14 @@ export default function App() {
             element={getPortalSession() ? <Navigate to="/assessment" replace /> : <LoginPage />}
           />
           <Route element={<RequirePortalSession />}>
-            <Route path="/assessment" element={<AssessmentPage />} />
-            <Route path="/code/:id" element={<CodingPage />} />
+            <Route
+              path="/assessment"
+              element={<AssessmentPage attemptedProblemIds={attemptedProblemIds} />}
+            />
+            <Route
+              path="/code/:id"
+              element={<CodingPage onProblemAttempted={markProblemAttempted} />}
+            />
           </Route>
           <Route path="*" element={<PortalHome />} />
         </Routes>

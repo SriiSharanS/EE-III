@@ -7,17 +7,33 @@ import Navbar from '../components/Navbar';
 import { mockProblems } from '../data/mockProblems';
 import type { EvaluationResult, Problem, TestCaseExecutionResult } from '../types/problem';
 
-export default function CodingPage() {
+export default function CodingPage({
+  onProblemAttempted,
+}: {
+  onProblemAttempted: (problemId: number) => void;
+}) {
   const { id } = useParams();
 
   const problem = useMemo(() => {
     return mockProblems.find((item) => String(item.id) === id) ?? mockProblems[0];
   }, [id]);
 
-  return <CodingWorkspace key={problem.id} problem={problem} />;
+  return (
+    <CodingWorkspace
+      key={problem.id}
+      problem={problem}
+      onProblemAttempted={onProblemAttempted}
+    />
+  );
 }
 
-function CodingWorkspace({ problem }: { problem: Problem }) {
+function CodingWorkspace({
+  problem,
+  onProblemAttempted,
+}: {
+  problem: Problem;
+  onProblemAttempted: (problemId: number) => void;
+}) {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState(problem.exampleInput || '');
@@ -268,7 +284,7 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
 
       // Update problem status locally if all tests passed
       if (evaluationData.totalScore >= 70) {
-        problem.status = 'Attempted';
+        onProblemAttempted(problem.id);
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unknown error occurred during submission.';
