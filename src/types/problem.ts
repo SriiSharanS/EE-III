@@ -33,3 +33,34 @@ export interface Problem {
   testCases: TestCase[];
   starterCode: Record<Language, string>;
 }
+
+export interface TestCaseExecutionResult {
+  input: string;
+  expectedOutput: string;
+  actualOutput: string;
+  passed: boolean;
+}
+
+export interface EvaluationResult {
+  totalScore: number;
+  syntaxScore: number;
+  logicScore: number;
+  testCaseScore: number;
+  timeComplexityScore: number;
+  spaceComplexityScore: number;
+  codeQualityScore: number;
+
+  correctness: string;
+  timeComplexity: string;
+  spaceComplexity: string;
+
+  testCasesPassed: number;
+  testCasesTotal: number;
+
+  strengths: string[];
+  issues: string[];
+  suggestions: string[];
+
+  summary: string;
+}
+

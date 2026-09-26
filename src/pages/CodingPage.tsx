@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiUrl } from '../api';
 import CodeEditor from '../components/CodeEditor';
+import EvaluationPanel from '../components/EvaluationPanel';
 import Navbar from '../components/Navbar';
 import { mockProblems } from '../data/mockProblems';
-import type { Problem } from '../types/problem';
+import type { EvaluationResult, Problem, TestCaseExecutionResult } from '../types/problem';
 
 export default function CodingPage() {
   const { id } = useParams();
@@ -23,9 +24,17 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
   const [output, setOutput] = useState('');
   const [compilerError, setCompilerError] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStep, setSubmitStep] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'input' | 'output' | 'compiler'>('input');
   const [activeQuestionTab, setActiveQuestionTab] = useState<'description' | 'examples' | 'constraints'>('description');
 
+  // AI Evaluation State
+  const [evaluationResult, setEvaluationResult] = useState<EvaluationResult | null>(null);
+  const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
+  const [evaluationError, setEvaluationError] = useState<string | null>(null);
+
+  // RUN Flow: Only compiles & executes student code against custom input. Does NOT call Gemini.
   const handleRun = async () => {
     if (!code.trim()) {
       setCompilerError('Editor is empty. Please write your Java code first.');
@@ -101,6 +110,172 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
       setActiveTab('compiler');
     } finally {
       setIsRunning(false);
+    }
+  };
+
+  // SUBMIT Flow: Compiles, runs test cases against Java backend, sends authoritative results to Gemini API, and displays modal
+  const handleSubmit = async () => {
+    if (!code.trim()) {
+      setCompilerError('Editor is empty. Please write your Java code before submitting.');
+      setOutput('');
+      setActiveTab('compiler');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setEvaluationError(null);
+    setSubmitStep('Compiling Java solution and testing inputs...');
+
+    const testCasesToRun = problem.testCases && problem.testCases.length > 0
+      ? problem.testCases
+      : [{ input: problem.exampleInput || '', expected: problem.exampleOutput || '' }];
+
+    const executionResults: TestCaseExecutionResult[] = [];
+    let overallStatus: 'success' | 'compile_error' | 'runtime_error' | 'timeout' = 'success';
+    let mainStdout = '';
+    let mainStderr = '';
+    let mainCompileError = '';
+    const startTime = performance.now();
+
+    try {
+      // Step 1: Run through all problem test cases on Java execution backend
+      for (let i = 0; i < testCasesToRun.length; i++) {
+        const tc = testCasesToRun[i];
+        setSubmitStep(`Running Test Case ${i + 1} of ${testCasesToRun.length}...`);
+
+        let runRes: Response;
+        try {
+          runRes = await fetch(apiUrl('/api/run'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: code,
+              input: tc.input,
+            }),
+          });
+        } catch {
+          throw new Error('Java execution server is unavailable. Ensure the backend is running on port 8000.');
+        }
+
+        if (!runRes.ok) {
+          const text = await runRes.text();
+          throw new Error(`Java backend returned error ${runRes.status}: ${text}`);
+        }
+
+        const runData: {
+          success: boolean;
+          stage: 'compile' | 'runtime' | 'completed';
+          output: string;
+          error: string;
+        } = await runRes.json();
+
+        if (!runData.success && runData.stage === 'compile') {
+          // Compilation failed
+          overallStatus = 'compile_error';
+          mainCompileError = runData.error || 'Compilation failed';
+          mainStderr = runData.error || '';
+
+          // Add all remaining test cases as failed due to compilation error
+          for (let j = i; j < testCasesToRun.length; j++) {
+            executionResults.push({
+              input: testCasesToRun[j].input,
+              expectedOutput: testCasesToRun[j].expected,
+              actualOutput: 'Compilation Error',
+              passed: false,
+            });
+          }
+          break; // Stop running remaining tests if code doesn't compile
+        }
+
+        if (!runData.success && runData.stage === 'runtime') {
+          // Runtime error or timeout
+          if (overallStatus === 'success') {
+            overallStatus = runData.error.includes('Time Limit Exceeded') ? 'timeout' : 'runtime_error';
+          }
+          if (!mainStderr) mainStderr = runData.error;
+
+          executionResults.push({
+            input: tc.input,
+            expectedOutput: tc.expected,
+            actualOutput: runData.output || runData.error,
+            passed: false,
+          });
+          continue;
+        }
+
+        // Successfully executed
+        const actualTrimmed = (runData.output || '').trim();
+        const expectedTrimmed = tc.expected.trim();
+        const passed = actualTrimmed === expectedTrimmed;
+
+        if (!mainStdout && runData.output) {
+          mainStdout = runData.output;
+        }
+
+        executionResults.push({
+          input: tc.input,
+          expectedOutput: tc.expected,
+          actualOutput: runData.output,
+          passed,
+        });
+      }
+
+      const totalExecutionTimeMs = Math.round(performance.now() - startTime);
+
+      // Step 2: Send authoritative evidence to Gemini AI Evaluator
+      setSubmitStep('Analyzing code and generating AI assessment with Gemini...');
+
+      const evaluatePayload = {
+        question: {
+          title: problem.title,
+          description: problem.description,
+          inputFormat: problem.input,
+          outputFormat: problem.output,
+          constraints: problem.constraints,
+        },
+        code: code,
+        execution: {
+          status: overallStatus,
+          stdout: mainStdout,
+          stderr: mainStderr,
+          compileError: mainCompileError,
+          executionTimeMs: totalExecutionTimeMs,
+        },
+        testCases: executionResults,
+      };
+
+      const evalRes = await fetch(apiUrl('/api/evaluate'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(evaluatePayload),
+      });
+
+      if (!evalRes.ok) {
+        let errorDetail = 'AI Evaluation request failed.';
+        try {
+          const errJson = await evalRes.json();
+          errorDetail = errJson.detail || errJson.message || errorDetail;
+        } catch {
+          const rawText = await evalRes.text();
+          if (rawText) errorDetail = rawText;
+        }
+        throw new Error(errorDetail);
+      }
+
+      const evaluationData: EvaluationResult = await evalRes.json();
+      setEvaluationResult(evaluationData);
+      setIsEvaluationOpen(true);
+
+      // Update problem status locally if all tests passed
+      if (evaluationData.totalScore >= 70) {
+        problem.status = 'Attempted';
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unknown error occurred during submission.';
+      setEvaluationError(message);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitStep('');
     }
   };
 
@@ -232,7 +407,7 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
 
                   {problem.testCases && problem.testCases.length > 0 && (
                     <div className="description-block">
-                      <div className="question-section-label">Sample Test Cases</div>
+                      <div className="question-section-label">Sample Test Cases ({problem.testCases.length})</div>
                       {problem.testCases.map((tc, idx) => (
                         <div key={idx} className="sample-tc-item">
                           <div className="mini-label">Case #{idx + 1}</div>
@@ -272,8 +447,10 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
               code={code}
               onChangeCode={setCode}
               onRun={handleRun}
+              onSubmit={handleSubmit}
               onReset={handleReset}
               isRunning={isRunning}
+              isSubmitting={isSubmitting}
               activeTab={activeTab}
               onTabChange={setActiveTab}
               customInput={customInput}
@@ -284,6 +461,58 @@ function CodingWorkspace({ problem }: { problem: Problem }) {
           </section>
         </section>
       </main>
+
+      {/* Submitting Liquid Glass Loading Modal */}
+      {isSubmitting && (
+        <div className="modal-backdrop submission-backdrop" role="status" aria-live="polite">
+          <div className="submission-loading-card appear appear--pop">
+            <div className="loading-spinner-ring">
+              <div className="spinner-core" />
+            </div>
+            <h3 className="submitting-title">Evaluating Submission</h3>
+            <p className="submitting-status">{submitStep}</p>
+            <div className="submitting-subtext">
+              Executing JDK subprocess & Google Gemini assessment...
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Submission Error Dialog */}
+      {evaluationError && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="confirm-dialog appear appear--pop">
+            <h3 className="dialog-title" style={{ color: '#fca5a5' }}>
+              Submission Evaluation Failed
+            </h3>
+            <p className="dialog-message" style={{ whiteSpace: 'pre-line' }}>
+              {evaluationError}
+            </p>
+            <div className="dialog-actions">
+              <button
+                type="button"
+                className="dialog-btn dialog-cancel"
+                onClick={() => setEvaluationError(null)}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Structured Gemini AI Assessment Result Modal */}
+      <EvaluationPanel
+        visible={isEvaluationOpen}
+        evaluation={evaluationResult}
+        code={code}
+        problemTitle={problem.title}
+        onClose={() => setIsEvaluationOpen(false)}
+        onBack={() => {
+          setIsEvaluationOpen(false);
+          navigate('/assessment');
+        }}
+      />
     </div>
   );
 }

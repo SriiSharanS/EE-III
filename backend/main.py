@@ -7,11 +7,22 @@ import shutil
 import signal
 import subprocess
 import tempfile
+import sys
 from typing import Literal, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+backend_dir = Path(__file__).resolve().parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
+from services.gemini_evaluator import (
+    EvaluateRequest,
+    EvaluationResponse,
+    evaluate_with_gemini,
+)
 
 # ============================================================================
 # CodeAssess AI - Local Java Execution Engine (Prototype)
@@ -346,3 +357,33 @@ def run_java(request: RunRequest) -> RunResponse:
             output="",
             error=f"Unexpected backend error: {error}",
         )
+
+
+@app.post("/api/evaluate", response_model=EvaluationResponse)
+def evaluate_code(request: EvaluateRequest) -> EvaluationResponse:
+    print(f"[CodeAssess] AI Evaluation requested for problem: '{request.question.title}'", flush=True)
+    print(f"[CodeAssess] Code length: {len(request.code)} chars, test cases count: {len(request.testCases)}", flush=True)
+
+    if not request.code or not request.code.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Editor is empty. Cannot evaluate empty code.",
+        )
+
+    try:
+        evaluation = evaluate_with_gemini(request)
+        print(
+            f"[CodeAssess] Gemini evaluation succeeded. Score: {evaluation.totalScore}/100, Passed: {evaluation.testCasesPassed}/{evaluation.testCasesTotal}",
+            flush=True,
+        )
+        return evaluation
+    except ValueError as e:
+        print(f"[CodeAssess] Evaluation config/validation error: {e}", flush=True)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except Exception as e:
+        print(f"[CodeAssess] Evaluation service failure: {e}", flush=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Gemini AI Evaluation failed: {e}",
+        )
+

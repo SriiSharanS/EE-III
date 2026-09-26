@@ -30,7 +30,8 @@ export const mockProblems: Problem[] = [
     constraints: '1 <= n <= 1000',
     testCases: [
       { input: '5\n10 25 7 99 32', expected: '99' },
-      { input: '4\n-5 -2 -20 -1', expected: '-1' },
+      { input: '4\n3 1 8 2', expected: '8' },
+      { input: '6\n-5 -2 -10 -1 -8 -3', expected: '-1' },
     ],
     starterCode: {
       Python: `def find_max(arr):\n    # Write your code here\n    pass\n\nn = int(input())\narr = list(map(int, input().split()))\nprint(find_max(arr))`,

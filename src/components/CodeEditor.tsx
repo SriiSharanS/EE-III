@@ -7,8 +7,10 @@ interface CodeEditorProps {
   code: string;
   onChangeCode: (code: string) => void;
   onRun: () => void;
+  onSubmit: () => void;
   onReset: () => void;
   isRunning: boolean;
+  isSubmitting: boolean;
   activeTab: 'input' | 'output' | 'compiler';
   onTabChange: (tab: 'input' | 'output' | 'compiler') => void;
   customInput: string;
@@ -21,8 +23,10 @@ export default function CodeEditor({
   code,
   onChangeCode,
   onRun,
+  onSubmit,
   onReset,
   isRunning,
+  isSubmitting,
   activeTab,
   onTabChange,
   customInput,
@@ -118,7 +122,7 @@ export default function CodeEditor({
             type="button"
             className="editor-action reset"
             onClick={handleResetClick}
-            disabled={isRunning}
+            disabled={isRunning || isSubmitting}
           >
             Reset
           </button>
@@ -126,19 +130,18 @@ export default function CodeEditor({
             type="button"
             className={`editor-action run ${isRunning ? 'loading' : ''}`}
             onClick={onRun}
-            disabled={isRunning}
+            disabled={isRunning || isSubmitting}
           >
             {isRunning ? 'Running...' : 'Run'}
           </button>
-          <div className="submit-wrapper" title="Evaluation will be enabled in the next phase.">
-            <button
-              type="button"
-              className="editor-action submit disabled"
-              disabled
-            >
-              Submit
-            </button>
-          </div>
+          <button
+            type="button"
+            className={`editor-action submit ${isSubmitting ? 'loading' : ''}`}
+            onClick={onSubmit}
+            disabled={isRunning || isSubmitting}
+          >
+            {isSubmitting ? 'Evaluating...' : 'Submit'}
+          </button>
         </div>
       </div>
 
@@ -163,7 +166,7 @@ export default function CodeEditor({
             selectOnLineNumbers: true,
             glyphMargin: false,
             copyWithSyntaxHighlighting: false,
-            readOnly: isRunning,
+            readOnly: isRunning || isSubmitting,
             quickSuggestions: true,
             suggestOnTriggerCharacters: true,
             snippetSuggestions: 'inline',
