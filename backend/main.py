@@ -21,6 +21,9 @@ if str(backend_dir) not in sys.path:
 from services.gemini_evaluator import (
     EvaluateRequest,
     EvaluationResponse,
+    ExecutionPayload,
+    QuestionPayload,
+    TestCaseResult,
     evaluate_with_gemini,
 )
 
@@ -93,6 +96,22 @@ def find_java_executable(command: str) -> Optional[str]:
     executable_name = f"{command}.exe" if os.name == "nt" else command
     candidate = Path(java_home) / "bin" / executable_name
     return str(candidate) if candidate.is_file() else None
+
+
+def detect_main_class(code: str) -> str:
+    # 1. Search for public class <Name>
+    public_match = re.search(r"public\s+class\s+([A-Za-z0-9_$]+)", code)
+    if public_match:
+        return public_match.group(1)
+    # 2. Search for class with public static void main
+    match = re.search(r"class\s+([A-Za-z0-9_$]+)[^{]*\{[^}]*public\s+static\s+void\s+main", code, re.DOTALL)
+    if match:
+        return match.group(1)
+    # 3. Search for any class definition
+    any_class = re.search(r"class\s+([A-Za-z0-9_$]+)", code)
+    if any_class:
+        return any_class.group(1)
+    return "Main"
 
 
 def read_java_version(javac_executable: Optional[str]) -> str:
@@ -238,10 +257,12 @@ def run_java(request: RunRequest) -> RunResponse:
             error="Java runtime was not found. Install JDK 17+ and set JAVA_HOME or PATH.",
         )
 
+    main_class = detect_main_class(request.code)
+
     try:
         with tempfile.TemporaryDirectory(prefix="codeassess-") as temporary_directory:
             working_directory = Path(temporary_directory)
-            source_file = working_directory / "Main.java"
+            source_file = working_directory / f"{main_class}.java"
             class_directory = working_directory / "classes"
             class_directory.mkdir()
             source_file.write_text(request.code, encoding="utf-8")
@@ -249,7 +270,7 @@ def run_java(request: RunRequest) -> RunResponse:
             # ----------------------------------------------------------------
             # Compilation Stage
             # ----------------------------------------------------------------
-            print("[CodeAssess] Compiling Main.java", flush=True)
+            print(f"[CodeAssess] Compiling {source_file.name}", flush=True)
             try:
                 compile_result = run_process(
                     [
@@ -297,7 +318,7 @@ def run_java(request: RunRequest) -> RunResponse:
             # ----------------------------------------------------------------
             # Execution Stage
             # ----------------------------------------------------------------
-            print("[CodeAssess] Executing Main", flush=True)
+            print(f"[CodeAssess] Executing {main_class}", flush=True)
             try:
                 execution_result = run_process(
                     [
@@ -306,7 +327,7 @@ def run_java(request: RunRequest) -> RunResponse:
                         "-Dfile.encoding=UTF-8",
                         "-cp",
                         str(class_directory),
-                        "Main",
+                        main_class,
                     ],
                     working_directory,
                     input_text=request.input,
@@ -386,4 +407,192 @@ def evaluate_code(request: EvaluateRequest) -> EvaluationResponse:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Gemini AI Evaluation failed: {e}",
         )
+
+
+class SubmitTestCase(BaseModel):
+    input: str = ""
+    expected: str = ""
+
+
+class SubmitRequest(BaseModel):
+    question: QuestionPayload
+    code: str
+    testCases: list[SubmitTestCase] = []
+
+
+@app.post("/api/submit", response_model=EvaluationResponse)
+def submit_code(request: SubmitRequest) -> EvaluationResponse:
+    """
+    Unified end-to-end submission endpoint:
+    1. Validates code
+    2. Compiles Java code once using local JDK
+    3. Runs each test case against the compiled bytecode with execution timeouts
+    4. Evaluates authoritative evidence using Gemini AI
+    5. Returns complete structured evaluation
+    """
+    print(f"[CodeAssess] Submission received for problem: '{request.question.title}'", flush=True)
+    print(f"[CodeAssess] Code length: {len(request.code)} characters, test cases: {len(request.testCases)}", flush=True)
+
+    if not request.code or not request.code.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Editor is empty. Please write your Java code before submitting.",
+        )
+
+    javac_executable = find_java_executable("javac")
+    java_executable = find_java_executable("java")
+    if not javac_executable or not java_executable:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="JDK is not properly configured on the server. Please install JDK 17+ and verify PATH.",
+        )
+
+    main_class = detect_main_class(request.code)
+    test_cases_to_run = request.testCases if request.testCases else [SubmitTestCase(input="", expected="")]
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="codeassess-submit-") as temporary_directory:
+            working_directory = Path(temporary_directory)
+            source_file = working_directory / f"{main_class}.java"
+            class_directory = working_directory / "classes"
+            class_directory.mkdir()
+            source_file.write_text(request.code, encoding="utf-8")
+
+            # 1. Compilation
+            print(f"[CodeAssess] Compiling {source_file.name}", flush=True)
+            try:
+                compile_result = run_process(
+                    [
+                        javac_executable,
+                        "-encoding",
+                        "UTF-8",
+                        "-d",
+                        str(class_directory),
+                        source_file.name,
+                    ],
+                    working_directory,
+                    timeout=COMPILE_TIMEOUT_SECONDS,
+                )
+            except subprocess.TimeoutExpired:
+                compile_err = f"Compilation timed out (limit: {COMPILE_TIMEOUT_SECONDS}s)."
+                eval_payload = EvaluateRequest(
+                    question=request.question,
+                    code=request.code,
+                    execution=ExecutionPayload(status="compile_error", compileError=compile_err),
+                    testCases=[
+                        TestCaseResult(input=tc.input, expectedOutput=tc.expected, actualOutput="Compilation Timeout", passed=False)
+                        for tc in test_cases_to_run
+                    ],
+                )
+                return evaluate_with_gemini(eval_payload)
+
+            if compile_result.returncode != 0:
+                print("[CodeAssess] Submission compilation failed", flush=True)
+                compile_err = compile_result.stderr if compile_result.stderr.strip() else compile_result.stdout
+                eval_payload = EvaluateRequest(
+                    question=request.question,
+                    code=request.code,
+                    execution=ExecutionPayload(
+                        status="compile_error",
+                        compileError=limit_output(compile_err or "Compilation failed."),
+                        stderr=limit_output(compile_err or ""),
+                    ),
+                    testCases=[
+                        TestCaseResult(input=tc.input, expectedOutput=tc.expected, actualOutput="Compilation Error", passed=False)
+                        for tc in test_cases_to_run
+                    ],
+                )
+                return evaluate_with_gemini(eval_payload)
+
+            print("[CodeAssess] Submission compilation successful. Executing test suite...", flush=True)
+
+            # 2. Execution across test cases
+            execution_results: list[TestCaseResult] = []
+            overall_status: Literal["success", "compile_error", "runtime_error", "timeout"] = "success"
+            main_stdout = ""
+            main_stderr = ""
+            start_time = time_ms = 0
+
+            for idx, tc in enumerate(test_cases_to_run, start=1):
+                try:
+                    exec_result = run_process(
+                        [
+                            java_executable,
+                            "-Xmx128m",
+                            "-Dfile.encoding=UTF-8",
+                            "-cp",
+                            str(class_directory),
+                            main_class,
+                        ],
+                        working_directory,
+                        input_text=tc.input,
+                        timeout=RUN_TIMEOUT_SECONDS,
+                    )
+                except subprocess.TimeoutExpired:
+                    overall_status = "timeout"
+                    execution_results.append(
+                        TestCaseResult(
+                            input=tc.input,
+                            expectedOutput=tc.expected,
+                            actualOutput="Time Limit Exceeded",
+                            passed=False,
+                        )
+                    )
+                    continue
+
+                actual_out = (exec_result.stdout or "").strip()
+                expected_out = tc.expected.strip()
+
+                if exec_result.returncode != 0:
+                    err_msg = exec_result.stderr if exec_result.stderr.strip() else f"Process exited with code {exec_result.returncode}"
+                    if overall_status == "success":
+                        overall_status = "runtime_error"
+                    if not main_stderr:
+                        main_stderr = err_msg
+                    execution_results.append(
+                        TestCaseResult(
+                            input=tc.input,
+                            expectedOutput=tc.expected,
+                            actualOutput=exec_result.stdout or err_msg,
+                            passed=False,
+                        )
+                    )
+                else:
+                    passed = actual_out == expected_out
+                    if not main_stdout and exec_result.stdout:
+                        main_stdout = exec_result.stdout
+                    execution_results.append(
+                        TestCaseResult(
+                            input=tc.input,
+                            expectedOutput=tc.expected,
+                            actualOutput=exec_result.stdout,
+                            passed=passed,
+                        )
+                    )
+
+            # 3. AI Evaluation
+            eval_payload = EvaluateRequest(
+                question=request.question,
+                code=request.code,
+                execution=ExecutionPayload(
+                    status=overall_status,
+                    stdout=main_stdout,
+                    stderr=main_stderr,
+                    executionTimeMs=time_ms,
+                ),
+                testCases=execution_results,
+            )
+
+            print("[CodeAssess] Calling Gemini AI evaluator with test evidence...", flush=True)
+            return evaluate_with_gemini(eval_payload)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[CodeAssess] Unexpected submission failure: {e}", flush=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Submission processing error: {e}",
+        )
+
 

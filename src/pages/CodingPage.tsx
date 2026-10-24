@@ -5,7 +5,7 @@ import CodeEditor from '../components/CodeEditor';
 import EvaluationPanel from '../components/EvaluationPanel';
 import Navbar from '../components/Navbar';
 import { mockProblems } from '../data/mockProblems';
-import type { EvaluationResult, Problem, TestCaseExecutionResult } from '../types/problem';
+import type { EvaluationResult, Problem } from '../types/problem';
 
 export default function CodingPage({
   onProblemAttempted,
@@ -35,7 +35,8 @@ function CodingWorkspace({
   onProblemAttempted: (problemId: number) => void;
 }) {
   const navigate = useNavigate();
-  const [code, setCode] = useState('');
+  const initialCode = problem.starterCode?.['Java'] || '';
+  const [code, setCode] = useState(initialCode);
   const [customInput, setCustomInput] = useState(problem.exampleInput || '');
   const [output, setOutput] = useState('');
   const [compilerError, setCompilerError] = useState('');
@@ -78,7 +79,7 @@ function CodingWorkspace({
       });
     } catch {
       setCompilerError(
-        'Execution server is unavailable.\n\nStart the CodeAssess Java backend on port 8000.'
+        'Execution server is unavailable.\n\nEnsure the CodeAssess Java backend is running on port 8000.'
       );
       setOutput('');
       setActiveTab('compiler');
@@ -88,6 +89,14 @@ function CodingWorkspace({
 
     try {
       if (!response.ok) {
+        if (response.status === 502 || response.status === 503 || response.status === 504) {
+          setCompilerError(
+            `Java backend service is currently unreachable (HTTP ${response.status} Bad Gateway).\n\nPlease ensure the backend server is running on port 8000.`
+          );
+          setActiveTab('compiler');
+          return;
+        }
+
         const responseText = await response.text();
         setCompilerError(
           responseText || `Execution server returned HTTP ${response.status}.`
@@ -146,143 +155,59 @@ function CodingWorkspace({
       ? problem.testCases
       : [{ input: problem.exampleInput || '', expected: problem.exampleOutput || '' }];
 
-    const executionResults: TestCaseExecutionResult[] = [];
-    let overallStatus: 'success' | 'compile_error' | 'runtime_error' | 'timeout' = 'success';
-    let mainStdout = '';
-    let mainStderr = '';
-    let mainCompileError = '';
-    const startTime = performance.now();
-
     try {
-      // Step 1: Run through all problem test cases on Java execution backend
-      for (let i = 0; i < testCasesToRun.length; i++) {
-        const tc = testCasesToRun[i];
-        setSubmitStep(`Running Test Case ${i + 1} of ${testCasesToRun.length}...`);
+      setSubmitStep('Compiling and executing test cases on JDK...');
 
-        let runRes: Response;
-        try {
-          runRes = await fetch(apiUrl('/api/run'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              code: code,
+      let response: Response;
+      try {
+        response = await fetch(apiUrl('/api/submit'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question: {
+              title: problem.title,
+              description: problem.description,
+              inputFormat: problem.input,
+              outputFormat: problem.output,
+              constraints: problem.constraints,
+            },
+            code: code,
+            testCases: testCasesToRun.map((tc) => ({
               input: tc.input,
-            }),
-          });
-        } catch {
-          throw new Error('Java execution server is unavailable. Ensure the backend is running on port 8000.');
-        }
-
-        if (!runRes.ok) {
-          const text = await runRes.text();
-          throw new Error(`Java backend returned error ${runRes.status}: ${text}`);
-        }
-
-        const runData: {
-          success: boolean;
-          stage: 'compile' | 'runtime' | 'completed';
-          output: string;
-          error: string;
-        } = await runRes.json();
-
-        if (!runData.success && runData.stage === 'compile') {
-          // Compilation failed
-          overallStatus = 'compile_error';
-          mainCompileError = runData.error || 'Compilation failed';
-          mainStderr = runData.error || '';
-
-          // Add all remaining test cases as failed due to compilation error
-          for (let j = i; j < testCasesToRun.length; j++) {
-            executionResults.push({
-              input: testCasesToRun[j].input,
-              expectedOutput: testCasesToRun[j].expected,
-              actualOutput: 'Compilation Error',
-              passed: false,
-            });
-          }
-          break; // Stop running remaining tests if code doesn't compile
-        }
-
-        if (!runData.success && runData.stage === 'runtime') {
-          // Runtime error or timeout
-          if (overallStatus === 'success') {
-            overallStatus = runData.error.includes('Time Limit Exceeded') ? 'timeout' : 'runtime_error';
-          }
-          if (!mainStderr) mainStderr = runData.error;
-
-          executionResults.push({
-            input: tc.input,
-            expectedOutput: tc.expected,
-            actualOutput: runData.output || runData.error,
-            passed: false,
-          });
-          continue;
-        }
-
-        // Successfully executed
-        const actualTrimmed = (runData.output || '').trim();
-        const expectedTrimmed = tc.expected.trim();
-        const passed = actualTrimmed === expectedTrimmed;
-
-        if (!mainStdout && runData.output) {
-          mainStdout = runData.output;
-        }
-
-        executionResults.push({
-          input: tc.input,
-          expectedOutput: tc.expected,
-          actualOutput: runData.output,
-          passed,
+              expected: tc.expected,
+            })),
+          }),
         });
+      } catch {
+        throw new Error(
+          'Java execution server is unavailable.\n\nPlease start the backend server on port 8000 (uvicorn backend.main:app --port 8000).'
+        );
       }
 
-      const totalExecutionTimeMs = Math.round(performance.now() - startTime);
+      if (!response.ok) {
+        if (response.status === 502 || response.status === 503 || response.status === 504) {
+          throw new Error(
+            `Java backend service is currently unreachable (HTTP ${response.status} Bad Gateway).\n\nPlease ensure the backend server is running on port 8000.`
+          );
+        }
 
-      // Step 2: Send authoritative evidence to Gemini AI Evaluator
-      setSubmitStep('Analyzing code and generating AI assessment with Gemini...');
-
-      const evaluatePayload = {
-        question: {
-          title: problem.title,
-          description: problem.description,
-          inputFormat: problem.input,
-          outputFormat: problem.output,
-          constraints: problem.constraints,
-        },
-        code: code,
-        execution: {
-          status: overallStatus,
-          stdout: mainStdout,
-          stderr: mainStderr,
-          compileError: mainCompileError,
-          executionTimeMs: totalExecutionTimeMs,
-        },
-        testCases: executionResults,
-      };
-
-      const evalRes = await fetch(apiUrl('/api/evaluate'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(evaluatePayload),
-      });
-
-      if (!evalRes.ok) {
-        let errorDetail = 'AI Evaluation request failed.';
+        let errorDetail = `Submission evaluation failed (HTTP ${response.status}).`;
         try {
-          const errJson = await evalRes.json();
+          const errJson = await response.json();
           errorDetail = errJson.detail || errJson.message || errorDetail;
         } catch {
-          const rawText = await evalRes.text();
+          const rawText = await response.text();
           if (rawText) errorDetail = rawText;
         }
         throw new Error(errorDetail);
       }
 
-      const evaluationData: EvaluationResult = await evalRes.json();
+      setSubmitStep('Generating AI assessment and diagnostic feedback...');
+      const evaluationData: EvaluationResult = await response.json();
       setEvaluationResult(evaluationData);
       setIsEvaluationOpen(true);
 
-      // Update problem status locally if all tests passed
+      // Update problem status locally if all tests passed or high score
       if (evaluationData.totalScore >= 70) {
         onProblemAttempted(problem.id);
       }
@@ -296,7 +221,7 @@ function CodingWorkspace({
   };
 
   const handleReset = () => {
-    setCode('');
+    setCode(problem.starterCode?.['Java'] || '');
     setOutput('');
     setCompilerError('');
     setActiveTab('input');

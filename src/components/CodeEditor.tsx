@@ -104,7 +104,6 @@ export default function CodeEditor({
 
   const handleConfirmReset = () => {
     setShowResetConfirm(false);
-    onChangeCode('');
     onReset();
   };
 
