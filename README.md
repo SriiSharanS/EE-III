@@ -1,4 +1,4 @@
-# CodeAssess AI
+# CodeAssess AI (EE3 Code Evaluator)
 
 A React assessment portal backed by a local FastAPI service that compiles and runs Java 17 submissions.
 
