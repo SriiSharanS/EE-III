@@ -18,6 +18,7 @@ export interface TestCase {
 
 export interface Problem {
   id: number;
+  testCaseCount?: number;
   number: number;
   title: string;
   difficulty: Difficulty;

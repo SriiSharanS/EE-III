@@ -1,10 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiUrl, javaSubmissionTimeoutMs } from '../api';
+import { apiUrl, fetchProblem, javaSubmissionTimeoutMs } from '../api';
 import CodeEditor from '../components/CodeEditor';
 import EvaluationPanel from '../components/EvaluationPanel';
 import Navbar from '../components/Navbar';
-import { mockProblems } from '../data/mockProblems';
 import type { EvaluationResult, Problem, SubmissionResponse } from '../types/problem';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -79,17 +78,88 @@ export default function CodingPage({
   onProblemAttempted: (problemId: number) => void;
 }) {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const problemId = Number(id);
+  const hasValidId = Number.isSafeInteger(problemId) && problemId > 0;
+  const [retryCount, setRetryCount] = useState(0);
+  const requestKey = `${id ?? ''}:${retryCount}`;
+  const [problemLoad, setProblemLoad] = useState<
+    | { key: string; status: 'success'; problem: Problem }
+    | { key: string; status: 'error'; message: string }
+  >();
 
-  const problem = useMemo(() => {
-    return mockProblems.find((item) => String(item.id) === id) ?? mockProblems[0];
-  }, [id]);
+  useEffect(() => {
+    const controller = new AbortController();
+    if (!hasValidId) return () => controller.abort();
+    fetchProblem(problemId, controller.signal)
+      .then((loadedProblem) => {
+        setProblemLoad({ key: requestKey, status: 'success', problem: loadedProblem });
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setProblemLoad({
+            key: requestKey,
+            status: 'error',
+            message: error instanceof Error ? error.message : 'Unable to load this problem.',
+          });
+        }
+      });
 
-  return (
+    return () => controller.abort();
+  }, [hasValidId, problemId, requestKey]);
+
+  const currentProblemLoad = problemLoad?.key === requestKey ? problemLoad : null;
+  const matchingProblem =
+    currentProblemLoad?.status === 'success' && currentProblemLoad.problem.id === problemId
+      ? currentProblemLoad.problem
+      : null;
+  const loadError = hasValidId
+    ? currentProblemLoad?.status === 'error'
+      ? currentProblemLoad.message
+      : null
+    : 'The requested problem ID is invalid.';
+  const isLoading = hasValidId && !matchingProblem && !loadError;
+
+  return matchingProblem ? (
     <CodingWorkspace
-      key={problem.id}
-      problem={problem}
+      key={matchingProblem.id}
+      problem={matchingProblem}
       onProblemAttempted={onProblemAttempted}
     />
+  ) : (
+    <div className="app-shell">
+      <div className="ambient-glow glow-top" aria-hidden="true" />
+      <Navbar />
+      <main className="coding-page">
+        <section className="page-head coding-head" aria-live="polite">
+          <div>
+            <h1 className="coding-problem-title">
+              {loadError ? 'Problem unavailable' : 'Loading problem…'}
+            </h1>
+            {loadError && <p role="alert">{loadError}</p>}
+            {!loadError && isLoading && <p role="status">Loading problem details…</p>}
+          </div>
+          <div className="coding-header-meta">
+            {loadError && hasValidId && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => setRetryCount((count) => count + 1)}
+              >
+                Retry
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn btn-ghost back-to-list"
+              onClick={() => navigate('/assessment')}
+            >
+              Back to Problems
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
 
@@ -291,16 +361,15 @@ function CodingWorkspace({
     setIsEvaluationOpen(false);
     setSubmitStep('Compiling Java solution and testing inputs...');
 
-    const testCasesToRun = problem.testCases && problem.testCases.length > 0
-      ? problem.testCases
-      : [{ input: problem.exampleInput || '', expected: problem.exampleOutput || '' }];
+    const testCaseCount = problem.testCaseCount ?? problem.testCases.length;
 
     try {
       const submissionResponse = await fetch(apiUrl('/api/submit'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(javaSubmissionTimeoutMs(testCasesToRun.length)),
+        signal: AbortSignal.timeout(javaSubmissionTimeoutMs(testCaseCount)),
         body: JSON.stringify({
+          problemId: problem.id,
           question: {
             title: problem.title,
             description: problem.description,
@@ -309,10 +378,6 @@ function CodingWorkspace({
             constraints: problem.constraints,
           },
           code: codeAtSubmission,
-          testCases: testCasesToRun.map((tc) => ({
-            input: tc.input,
-            expected: tc.expected,
-          })),
         }),
       });
 

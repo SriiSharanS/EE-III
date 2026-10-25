@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchProblems } from '../api';
 import FilterBar from '../components/FilterBar';
 import Navbar from '../components/Navbar';
 import ProblemCard from '../components/ProblemCard';
-import { mockProblems } from '../data/mockProblems';
-import type { Language, Topic } from '../types/problem';
+import type { Language, Problem, Topic } from '../types/problem';
 
 export default function AssessmentPage({
   attemptedProblemIds,
@@ -16,9 +16,40 @@ export default function AssessmentPage({
   const [difficulty, setDifficulty] = useState('All');
   const [topic, setTopic] = useState<Topic | 'All Topics'>('All Topics');
   const [search, setSearch] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
+  const [problemLoad, setProblemLoad] = useState<
+    | { attempt: number; status: 'loading' }
+    | { attempt: number; status: 'success'; problems: Problem[] }
+    | { attempt: number; status: 'error'; message: string }
+  >({ attempt: 0, status: 'loading' });
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetchProblems(controller.signal)
+      .then((loadedProblems) => {
+        setProblemLoad({ attempt: retryCount, status: 'success', problems: loadedProblems });
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setProblemLoad({
+            attempt: retryCount,
+            status: 'error',
+            message: error instanceof Error ? error.message : 'Unable to load problems.',
+          });
+        }
+      });
+
+    return () => controller.abort();
+  }, [retryCount]);
+
+  const currentProblemLoad = problemLoad.attempt === retryCount ? problemLoad : null;
+  const isLoading = !currentProblemLoad || currentProblemLoad.status === 'loading';
+  const loadError = currentProblemLoad?.status === 'error' ? currentProblemLoad.message : null;
 
   const filteredProblems = useMemo(() => {
-    return mockProblems.filter((problem) => {
+    if (currentProblemLoad?.status !== 'success') return [];
+    return currentProblemLoad.problems.filter((problem) => {
       const matchesLanguage = problem.starterCode[language] !== undefined;
       const matchesDifficulty = difficulty === 'All' || problem.difficulty === difficulty;
       const matchesTopic = topic === 'All Topics' || problem.topic === topic;
@@ -27,7 +58,7 @@ export default function AssessmentPage({
         problem.title.toLowerCase().includes(query) || problem.topic.toLowerCase().includes(query);
       return matchesLanguage && matchesDifficulty && matchesTopic && matchesSearch;
     });
-  }, [difficulty, language, search, topic]);
+  }, [currentProblemLoad, difficulty, language, search, topic]);
 
   return (
     <div className="app-shell">
@@ -167,7 +198,9 @@ export default function AssessmentPage({
         >
           <div className="table-header-meta">
             <span className="table-count-label">
-              Showing <b>{filteredProblems.length}</b> problem{filteredProblems.length === 1 ? '' : 's'}
+              {isLoading || loadError
+                ? 'Problem list'
+                : <>Showing <b>{filteredProblems.length}</b> problem{filteredProblems.length === 1 ? '' : 's'}</>}
             </span>
           </div>
 
@@ -184,16 +217,35 @@ export default function AssessmentPage({
               </tr>
             </thead>
             <tbody>
-              {filteredProblems.map((problem) => (
-                <ProblemCard
-                  key={problem.id}
-                  problem={
-                    attemptedProblemIds.has(problem.id)
-                      ? { ...problem, status: 'Attempted' }
-                      : problem
-                  }
-                />
-              ))}
+              {isLoading ? (
+                <tr><td colSpan={7} role="status">Loading problems…</td></tr>
+              ) : loadError ? (
+                <tr>
+                  <td colSpan={7} role="alert">
+                    <p>Could not load problems: {loadError}</p>
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      onClick={() => setRetryCount((count) => count + 1)}
+                    >
+                      Retry
+                    </button>
+                  </td>
+                </tr>
+              ) : filteredProblems.length === 0 ? (
+                <tr><td colSpan={7}>No problems match the selected filters.</td></tr>
+              ) : (
+                filteredProblems.map((problem) => (
+                  <ProblemCard
+                    key={problem.id}
+                    problem={
+                      attemptedProblemIds.has(problem.id)
+                        ? { ...problem, status: 'Attempted' }
+                        : problem
+                    }
+                  />
+                ))
+              )}
             </tbody>
           </table>
         </section>

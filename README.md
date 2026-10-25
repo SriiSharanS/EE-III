@@ -62,3 +62,9 @@ Backend health is available at `GET /api/health`. Java execution is available at
 ```
 
 Submitted Java must expose `public static void main(String[] args)` in a `Main` class. Execution is time- and memory-limited for local development, but production deployments must run untrusted code in a dedicated sandbox such as gVisor, nsjail, or an isolated container.
+
+### Backend question bank
+
+The current eight question records are stored in `backend/question_bank.json` and validated by backend Pydantic models. `GET /api/problems` lists public question metadata and examples; `GET /api/problems/{problem_id}` returns one public record. The public response preserves the frontend `Problem` shape, returns an empty `testCases` array and blank `starterCode` values, and includes a public test-case count for request timeout calculation. The frontend loads the list and individual questions from these endpoints.
+
+`POST /api/submit` now requires a `problemId`, retrieves that problem's authoritative test cases from the backend bank, and rejects client-supplied extra fields such as `testCases`. This keeps grading tests server-selected; the browser receives the actual case results only after submission.

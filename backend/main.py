@@ -16,7 +16,7 @@ from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 backend_dir = Path(__file__).resolve().parent
 if str(backend_dir) not in sys.path:
@@ -30,6 +30,11 @@ from services.gemini_evaluator import (
     QuestionPayload,
     TestCaseResult,
     evaluate_with_gemini,
+)
+from services.question_bank import QuestionBankError, load_question_bank
+from services.question_bank import (
+    PublicProblem,
+    to_public_problem,
 )
 
 # ============================================================================
@@ -231,6 +236,37 @@ def health_check() -> HealthResponse:
         java_available=java_available,
         java_version=read_java_version(javac_executable),
     )
+
+
+@app.get("/api/problems", response_model=list[PublicProblem])
+def list_problems() -> list[PublicProblem]:
+    try:
+        bank = load_question_bank()
+    except QuestionBankError as error:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error),
+        ) from error
+    return [to_public_problem(problem) for problem in bank.questions]
+
+
+@app.get("/api/problems/{problem_id}", response_model=PublicProblem)
+def get_problem(problem_id: int) -> PublicProblem:
+    try:
+        bank = load_question_bank()
+    except QuestionBankError as error:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error),
+        ) from error
+
+    problem = next((item for item in bank.questions if item.id == problem_id), None)
+    if problem is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Problem with ID {problem_id} was not found.",
+        )
+    return to_public_problem(problem)
 
 
 @app.post("/api/run", response_model=RunResponse)
@@ -478,9 +514,11 @@ class SubmitTestCase(BaseModel):
 
 
 class SubmitRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    problemId: int
     question: QuestionPayload
     code: str
-    testCases: list[SubmitTestCase] = []
 
 
 @app.post("/api/submit", response_model=SubmissionResponse)
@@ -489,11 +527,11 @@ def submit_code(request: SubmitRequest) -> SubmissionResponse:
     request_started = time.perf_counter()
     response_status = status.HTTP_200_OK
     logger.info(
-        "submission.start id=%s title=%r source_chars=%d test_cases=%d",
+        "submission.start id=%s problem_id=%d title=%r source_chars=%d",
         submission_id,
+        request.problemId,
         request.question.title,
         len(request.code),
-        len(request.testCases),
     )
 
     try:
@@ -502,6 +540,23 @@ def submit_code(request: SubmitRequest) -> SubmissionResponse:
             raise HTTPException(
                 status_code=response_status,
                 detail="Editor is empty. Please write your Java code before submitting.",
+            )
+
+        try:
+            bank = load_question_bank()
+        except QuestionBankError as error:
+            response_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+            raise HTTPException(status_code=response_status, detail=str(error)) from error
+
+        problem = next(
+            (item for item in bank.questions if item.id == request.problemId),
+            None,
+        )
+        if problem is None:
+            response_status = status.HTTP_404_NOT_FOUND
+            raise HTTPException(
+                status_code=response_status,
+                detail=f"Problem with ID {request.problemId} was not found.",
             )
 
         javac_executable = find_java_executable("javac")
@@ -514,7 +569,10 @@ def submit_code(request: SubmitRequest) -> SubmissionResponse:
             )
 
         main_class = detect_main_class(request.code)
-        test_cases_to_run = request.testCases or [SubmitTestCase(input="", expected="")]
+        test_cases_to_run = [
+            SubmitTestCase(input=test_case.input, expected=test_case.expected)
+            for test_case in problem.testCases
+        ]
 
         with tempfile.TemporaryDirectory(prefix="codeassess-submit-") as temporary_directory:
             working_directory = Path(temporary_directory)
