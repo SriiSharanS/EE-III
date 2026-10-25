@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 import re
 import shutil
 import signal
 import subprocess
-import tempfile
 import sys
+import tempfile
+import threading
+import time
 from typing import Literal, Optional
+from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,9 +23,10 @@ if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
 from services.gemini_evaluator import (
-    EvaluateRequest,
     EvaluationResponse,
     ExecutionPayload,
+    FeedbackRequest,
+    GeminiEvaluationError,
     QuestionPayload,
     TestCaseResult,
     evaluate_with_gemini,
@@ -39,8 +44,17 @@ from services.gemini_evaluator import (
 
 app = FastAPI(title="CodeAssess Java Execution Backend")
 
-COMPILE_TIMEOUT_SECONDS = 10
-RUN_TIMEOUT_SECONDS = 5
+logger = logging.getLogger("codeassess")
+logger.setLevel(logging.INFO)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
+    logger.addHandler(handler)
+logger.propagate = False
+_feedback_in_flight: set[str] = set()
+_feedback_in_flight_lock = threading.Lock()
+COMPILE_TIMEOUT_SECONDS = min(60, max(1, int(os.environ.get("JAVA_COMPILE_TIMEOUT_SECONDS", "10"))))
+RUN_TIMEOUT_SECONDS = min(30, max(1, int(os.environ.get("JAVA_RUN_TIMEOUT_SECONDS", "5"))))
 MAX_SOURCE_CHARACTERS = 100_000
 MAX_INPUT_CHARACTERS = 100_000
 MAX_OUTPUT_CHARACTERS = 200_000
@@ -82,6 +96,15 @@ class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     java_available: bool
     java_version: str
+
+
+class SubmissionResponse(BaseModel):
+    submissionId: str
+    verdict: Literal["accepted", "wrong_answer", "compile_error", "runtime_error", "timeout"]
+    execution: ExecutionPayload
+    testCases: list[TestCaseResult]
+    testCasesPassed: int
+    testCasesTotal: int
 
 
 def find_java_executable(command: str) -> Optional[str]:
@@ -381,31 +404,71 @@ def run_java(request: RunRequest) -> RunResponse:
 
 
 @app.post("/api/evaluate", response_model=EvaluationResponse)
-def evaluate_code(request: EvaluateRequest) -> EvaluationResponse:
-    print(f"[CodeAssess] AI Evaluation requested for problem: '{request.question.title}'", flush=True)
-    print(f"[CodeAssess] Code length: {len(request.code)} chars, test cases count: {len(request.testCases)}", flush=True)
-
-    if not request.code or not request.code.strip():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Editor is empty. Cannot evaluate empty code.",
-        )
-
+def evaluate_code(request: FeedbackRequest) -> EvaluationResponse:
+    request_started = time.perf_counter()
+    response_status = status.HTTP_200_OK
+    submission_id = request.submissionId.strip()
+    claimed_submission = False
+    logger.info(
+        "feedback.start id=%s title=%r test_cases=%d",
+        submission_id or "unlinked",
+        request.question.title,
+        len(request.testCases),
+    )
     try:
-        evaluation = evaluate_with_gemini(request)
-        print(
-            f"[CodeAssess] Gemini evaluation succeeded. Score: {evaluation.totalScore}/100, Passed: {evaluation.testCasesPassed}/{evaluation.testCasesTotal}",
-            flush=True,
-        )
-        return evaluation
-    except ValueError as e:
-        print(f"[CodeAssess] Evaluation config/validation error: {e}", flush=True)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    except Exception as e:
-        print(f"[CodeAssess] Evaluation service failure: {e}", flush=True)
+        if submission_id:
+            with _feedback_in_flight_lock:
+                if submission_id in _feedback_in_flight:
+                    response_status = status.HTTP_409_CONFLICT
+                    raise HTTPException(
+                        status_code=response_status,
+                        detail="AI feedback for this submission is already in progress.",
+                    )
+                _feedback_in_flight.add(submission_id)
+                claimed_submission = True
+        if not request.code or not request.code.strip():
+            response_status = status.HTTP_400_BAD_REQUEST
+            raise HTTPException(
+                status_code=response_status,
+                detail="Editor is empty. Cannot evaluate code.",
+            )
+        return evaluate_with_gemini(request)
+    except GeminiEvaluationError as error:
+        response_status = error.http_status
+        headers = {}
+        if error.retry_after_seconds is not None:
+            headers["Retry-After"] = str(max(0, int(error.retry_after_seconds)))
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Gemini AI Evaluation failed: {e}",
+            status_code=response_status,
+            detail=str(error),
+            headers=headers or None,
+        ) from error
+    except ValueError as error:
+        response_status = status.HTTP_400_BAD_REQUEST
+        raise HTTPException(status_code=response_status, detail=str(error)) from error
+    except HTTPException as error:
+        response_status = error.status_code
+        raise
+    except Exception as error:
+        response_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        logger.error(
+            "feedback.failed id=%s error_type=%s",
+            request.submissionId or "unlinked",
+            type(error).__name__,
+        )
+        raise HTTPException(
+            status_code=response_status,
+            detail="AI feedback failed. You can retry without rerunning Java tests.",
+        ) from error
+    finally:
+        if claimed_submission:
+            with _feedback_in_flight_lock:
+                _feedback_in_flight.discard(submission_id)
+        logger.info(
+            "feedback.complete id=%s status=%d duration_ms=%.1f",
+            submission_id or "unlinked",
+            response_status,
+            (time.perf_counter() - request_started) * 1000,
         )
 
 
@@ -420,37 +483,39 @@ class SubmitRequest(BaseModel):
     testCases: list[SubmitTestCase] = []
 
 
-@app.post("/api/submit", response_model=EvaluationResponse)
-def submit_code(request: SubmitRequest) -> EvaluationResponse:
-    """
-    Unified end-to-end submission endpoint:
-    1. Validates code
-    2. Compiles Java code once using local JDK
-    3. Runs each test case against the compiled bytecode with execution timeouts
-    4. Evaluates authoritative evidence using Gemini AI
-    5. Returns complete structured evaluation
-    """
-    print(f"[CodeAssess] Submission received for problem: '{request.question.title}'", flush=True)
-    print(f"[CodeAssess] Code length: {len(request.code)} characters, test cases: {len(request.testCases)}", flush=True)
-
-    if not request.code or not request.code.strip():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Editor is empty. Please write your Java code before submitting.",
-        )
-
-    javac_executable = find_java_executable("javac")
-    java_executable = find_java_executable("java")
-    if not javac_executable or not java_executable:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="JDK is not properly configured on the server. Please install JDK 17+ and verify PATH.",
-        )
-
-    main_class = detect_main_class(request.code)
-    test_cases_to_run = request.testCases if request.testCases else [SubmitTestCase(input="", expected="")]
+@app.post("/api/submit", response_model=SubmissionResponse)
+def submit_code(request: SubmitRequest) -> SubmissionResponse:
+    submission_id = uuid4().hex
+    request_started = time.perf_counter()
+    response_status = status.HTTP_200_OK
+    logger.info(
+        "submission.start id=%s title=%r source_chars=%d test_cases=%d",
+        submission_id,
+        request.question.title,
+        len(request.code),
+        len(request.testCases),
+    )
 
     try:
+        if not request.code or not request.code.strip():
+            response_status = status.HTTP_400_BAD_REQUEST
+            raise HTTPException(
+                status_code=response_status,
+                detail="Editor is empty. Please write your Java code before submitting.",
+            )
+
+        javac_executable = find_java_executable("javac")
+        java_executable = find_java_executable("java")
+        if not javac_executable or not java_executable:
+            response_status = status.HTTP_503_SERVICE_UNAVAILABLE
+            raise HTTPException(
+                status_code=response_status,
+                detail="JDK is not properly configured on the server. Please install JDK 17+ and verify PATH.",
+            )
+
+        main_class = detect_main_class(request.code)
+        test_cases_to_run = request.testCases or [SubmitTestCase(input="", expected="")]
+
         with tempfile.TemporaryDirectory(prefix="codeassess-submit-") as temporary_directory:
             working_directory = Path(temporary_directory)
             source_file = working_directory / f"{main_class}.java"
@@ -458,8 +523,7 @@ def submit_code(request: SubmitRequest) -> EvaluationResponse:
             class_directory.mkdir()
             source_file.write_text(request.code, encoding="utf-8")
 
-            # 1. Compilation
-            print(f"[CodeAssess] Compiling {source_file.name}", flush=True)
+            compile_started = time.perf_counter()
             try:
                 compile_result = run_process(
                     [
@@ -474,46 +538,74 @@ def submit_code(request: SubmitRequest) -> EvaluationResponse:
                     timeout=COMPILE_TIMEOUT_SECONDS,
                 )
             except subprocess.TimeoutExpired:
-                compile_err = f"Compilation timed out (limit: {COMPILE_TIMEOUT_SECONDS}s)."
-                eval_payload = EvaluateRequest(
-                    question=request.question,
-                    code=request.code,
-                    execution=ExecutionPayload(status="compile_error", compileError=compile_err),
-                    testCases=[
-                        TestCaseResult(input=tc.input, expectedOutput=tc.expected, actualOutput="Compilation Timeout", passed=False)
-                        for tc in test_cases_to_run
-                    ],
+                compile_duration_ms = (time.perf_counter() - compile_started) * 1000
+                compile_error = f"Compilation timed out (limit: {COMPILE_TIMEOUT_SECONDS}s)."
+                logger.warning(
+                    "submission.compile.timeout id=%s duration_ms=%.1f",
+                    submission_id,
+                    compile_duration_ms,
                 )
-                return evaluate_with_gemini(eval_payload)
+                execution = ExecutionPayload(status="compile_error", compileError=compile_error)
+                results = [
+                    TestCaseResult(
+                        input=tc.input,
+                        expectedOutput=tc.expected,
+                        actualOutput="Compilation Timeout",
+                        passed=False,
+                    )
+                    for tc in test_cases_to_run
+                ]
+                return SubmissionResponse(
+                    submissionId=submission_id,
+                    verdict="compile_error",
+                    execution=execution,
+                    testCases=results,
+                    testCasesPassed=0,
+                    testCasesTotal=len(results),
+                )
+
+            compile_duration_ms = (time.perf_counter() - compile_started) * 1000
+            logger.info(
+                "submission.compile.complete id=%s duration_ms=%.1f exit_code=%d",
+                submission_id,
+                compile_duration_ms,
+                compile_result.returncode,
+            )
 
             if compile_result.returncode != 0:
-                print("[CodeAssess] Submission compilation failed", flush=True)
-                compile_err = compile_result.stderr if compile_result.stderr.strip() else compile_result.stdout
-                eval_payload = EvaluateRequest(
-                    question=request.question,
-                    code=request.code,
-                    execution=ExecutionPayload(
-                        status="compile_error",
-                        compileError=limit_output(compile_err or "Compilation failed."),
-                        stderr=limit_output(compile_err or ""),
-                    ),
-                    testCases=[
-                        TestCaseResult(input=tc.input, expectedOutput=tc.expected, actualOutput="Compilation Error", passed=False)
-                        for tc in test_cases_to_run
-                    ],
+                compile_error = compile_result.stderr or compile_result.stdout or "Compilation failed."
+                execution = ExecutionPayload(
+                    status="compile_error",
+                    compileError=limit_output(compile_error),
+                    stderr=limit_output(compile_error),
                 )
-                return evaluate_with_gemini(eval_payload)
+                results = [
+                    TestCaseResult(
+                        input=tc.input,
+                        expectedOutput=tc.expected,
+                        actualOutput="Compilation Error",
+                        passed=False,
+                    )
+                    for tc in test_cases_to_run
+                ]
+                return SubmissionResponse(
+                    submissionId=submission_id,
+                    verdict="compile_error",
+                    execution=execution,
+                    testCases=results,
+                    testCasesPassed=0,
+                    testCasesTotal=len(results),
+                )
 
-            print("[CodeAssess] Submission compilation successful. Executing test suite...", flush=True)
-
-            # 2. Execution across test cases
             execution_results: list[TestCaseResult] = []
             overall_status: Literal["success", "compile_error", "runtime_error", "timeout"] = "success"
             main_stdout = ""
             main_stderr = ""
-            start_time = time_ms = 0
+            tests_started = time.perf_counter()
 
             for idx, tc in enumerate(test_cases_to_run, start=1):
+                case_started = time.perf_counter()
+                case_status = "completed"
                 try:
                     exec_result = run_process(
                         [
@@ -529,6 +621,7 @@ def submit_code(request: SubmitRequest) -> EvaluationResponse:
                         timeout=RUN_TIMEOUT_SECONDS,
                     )
                 except subprocess.TimeoutExpired:
+                    case_status = "timeout"
                     overall_status = "timeout"
                     execution_results.append(
                         TestCaseResult(
@@ -538,61 +631,99 @@ def submit_code(request: SubmitRequest) -> EvaluationResponse:
                             passed=False,
                         )
                     )
-                    continue
-
-                actual_out = (exec_result.stdout or "").strip()
-                expected_out = tc.expected.strip()
-
-                if exec_result.returncode != 0:
-                    err_msg = exec_result.stderr if exec_result.stderr.strip() else f"Process exited with code {exec_result.returncode}"
-                    if overall_status == "success":
-                        overall_status = "runtime_error"
-                    if not main_stderr:
-                        main_stderr = err_msg
-                    execution_results.append(
-                        TestCaseResult(
-                            input=tc.input,
-                            expectedOutput=tc.expected,
-                            actualOutput=exec_result.stdout or err_msg,
-                            passed=False,
-                        )
-                    )
                 else:
-                    passed = actual_out == expected_out
-                    if not main_stdout and exec_result.stdout:
-                        main_stdout = exec_result.stdout
-                    execution_results.append(
-                        TestCaseResult(
-                            input=tc.input,
-                            expectedOutput=tc.expected,
-                            actualOutput=exec_result.stdout,
-                            passed=passed,
-                        )
-                    )
+                    actual_out = (exec_result.stdout or "").strip()
+                    expected_out = tc.expected.strip()
 
-            # 3. AI Evaluation
-            eval_payload = EvaluateRequest(
-                question=request.question,
-                code=request.code,
-                execution=ExecutionPayload(
-                    status=overall_status,
-                    stdout=main_stdout,
-                    stderr=main_stderr,
-                    executionTimeMs=time_ms,
-                ),
-                testCases=execution_results,
+                    if exec_result.returncode != 0:
+                        case_status = "runtime_error"
+                        err_msg = exec_result.stderr or f"Process exited with code {exec_result.returncode}."
+                        if overall_status == "success":
+                            overall_status = "runtime_error"
+                        if not main_stderr:
+                            main_stderr = err_msg
+                        execution_results.append(
+                            TestCaseResult(
+                                input=tc.input,
+                                expectedOutput=tc.expected,
+                                actualOutput=exec_result.stdout or err_msg,
+                                passed=False,
+                            )
+                        )
+                    else:
+                        passed = actual_out == expected_out
+                        if not main_stdout and exec_result.stdout:
+                            main_stdout = exec_result.stdout
+                        execution_results.append(
+                            TestCaseResult(
+                                input=tc.input,
+                                expectedOutput=tc.expected,
+                                actualOutput=exec_result.stdout,
+                                passed=passed,
+                            )
+                        )
+
+                logger.info(
+                    "submission.test_case.complete id=%s case=%d/%d duration_ms=%.1f status=%s",
+                    submission_id,
+                    idx,
+                    len(test_cases_to_run),
+                    (time.perf_counter() - case_started) * 1000,
+                    case_status,
+                )
+
+            test_duration_ms = (time.perf_counter() - tests_started) * 1000
+            passed_count = sum(1 for result in execution_results if result.passed)
+            logger.info(
+                "submission.tests.complete id=%s duration_ms=%.1f executed=%d total=%d passed=%d",
+                submission_id,
+                test_duration_ms,
+                len(execution_results),
+                len(test_cases_to_run),
+                passed_count,
             )
 
-            print("[CodeAssess] Calling Gemini AI evaluator with test evidence...", flush=True)
-            return evaluate_with_gemini(eval_payload)
+            execution = ExecutionPayload(
+                status=overall_status,
+                stdout=main_stdout,
+                stderr=main_stderr,
+                executionTimeMs=round(test_duration_ms),
+            )
+            if overall_status == "timeout":
+                verdict: Literal["accepted", "wrong_answer", "compile_error", "runtime_error", "timeout"] = "timeout"
+            elif overall_status == "runtime_error":
+                verdict = "runtime_error"
+            elif passed_count == len(execution_results):
+                verdict = "accepted"
+            else:
+                verdict = "wrong_answer"
 
-    except HTTPException:
+            return SubmissionResponse(
+                submissionId=submission_id,
+                verdict=verdict,
+                execution=execution,
+                testCases=execution_results,
+                testCasesPassed=passed_count,
+                testCasesTotal=len(execution_results),
+            )
+    except HTTPException as error:
+        response_status = error.status_code
         raise
-    except Exception as e:
-        print(f"[CodeAssess] Unexpected submission failure: {e}", flush=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Submission processing error: {e}",
+    except Exception as error:
+        response_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        logger.error(
+            "submission.failed id=%s error_type=%s",
+            submission_id,
+            type(error).__name__,
         )
-
-
+        raise HTTPException(
+            status_code=response_status,
+            detail="Submission processing failed. Check the backend logs for the request ID.",
+        ) from error
+    finally:
+        logger.info(
+            "submission.complete id=%s status=%d duration_ms=%.1f",
+            submission_id,
+            response_status,
+            (time.perf_counter() - request_started) * 1000,
+        )

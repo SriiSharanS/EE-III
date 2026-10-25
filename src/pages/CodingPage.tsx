@@ -1,11 +1,77 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiUrl } from '../api';
+import { apiUrl, javaSubmissionTimeoutMs } from '../api';
 import CodeEditor from '../components/CodeEditor';
 import EvaluationPanel from '../components/EvaluationPanel';
 import Navbar from '../components/Navbar';
 import { mockProblems } from '../data/mockProblems';
-import type { EvaluationResult, Problem } from '../types/problem';
+import type { EvaluationResult, Problem, SubmissionResponse } from '../types/problem';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+function isEvaluationResult(value: unknown): value is EvaluationResult {
+  if (!isRecord(value) || !isRecord(value.detailedFeedback)) return false;
+
+  const scoreFields = [
+    'totalScore',
+    'syntaxScore',
+    'logicScore',
+    'testCaseScore',
+    'timeComplexityScore',
+    'spaceComplexityScore',
+    'codeQualityScore',
+    'testCasesPassed',
+    'testCasesTotal',
+  ];
+  const textFields = [
+    'correctness',
+    'timeComplexity',
+    'spaceComplexity',
+    'summary',
+  ];
+  const detailed = value.detailedFeedback;
+  const detailTextFields = [
+    'overallAssessment',
+    'verdictExplanation',
+    'correctnessAnalysis',
+    'timeComplexityReasoning',
+    'spaceComplexityReasoning',
+    'practiceRecommendation',
+  ];
+  const detailArrayFields = [
+    'codeQualityStrengths',
+    'codeQualityImprovements',
+    'specificMistakes',
+    'correctionGuidance',
+    'javaConceptsToReview',
+  ];
+
+  return (
+    scoreFields.every((field) => Number.isInteger(value[field])) &&
+    textFields.every((field) => typeof value[field] === 'string') &&
+    ['strengths', 'issues', 'suggestions'].every((field) =>
+      isStringArray(value[field])
+    ) &&
+    detailTextFields.every((field) => typeof detailed[field] === 'string') &&
+    detailArrayFields.every((field) => isStringArray(detailed[field])) &&
+    Array.isArray(detailed.failedTests) &&
+    detailed.failedTests.every(
+      (test) =>
+        isRecord(test) &&
+        Number.isInteger(test.testCaseNumber) &&
+        typeof test.input === 'string' &&
+        typeof test.expectedOutput === 'string' &&
+        typeof test.actualOutput === 'string' &&
+        typeof test.explanation === 'string'
+    )
+  );
+}
 
 export default function CodingPage({
   onProblemAttempted,
@@ -35,21 +101,27 @@ function CodingWorkspace({
   onProblemAttempted: (problemId: number) => void;
 }) {
   const navigate = useNavigate();
-  const initialCode = problem.starterCode?.['Java'] || '';
+  const initialCode = '';
   const [code, setCode] = useState(initialCode);
   const [customInput, setCustomInput] = useState(problem.exampleInput || '');
   const [output, setOutput] = useState('');
   const [compilerError, setCompilerError] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
   const [submitStep, setSubmitStep] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'input' | 'output' | 'compiler'>('input');
   const [activeQuestionTab, setActiveQuestionTab] = useState<'description' | 'examples' | 'constraints'>('description');
 
   // AI Evaluation State
   const [evaluationResult, setEvaluationResult] = useState<EvaluationResult | null>(null);
+  const [submissionResult, setSubmissionResult] = useState<SubmissionResponse | null>(null);
+  const [submittedCode, setSubmittedCode] = useState('');
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [evaluationError, setEvaluationError] = useState<string | null>(null);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const submitInFlightRef = useRef(false);
+  const feedbackInFlightRef = useRef(false);
 
   // RUN Flow: Only compiles & executes student code against custom input. Does NOT call Gemini.
   const handleRun = async () => {
@@ -138,8 +210,70 @@ function CodingWorkspace({
     }
   };
 
-  // SUBMIT Flow: Compiles, runs test cases against Java backend, sends authoritative results to Gemini API, and displays modal
+  const handleFeedback = async (submission: SubmissionResponse, codeForFeedback: string) => {
+    if (feedbackInFlightRef.current) return;
+    feedbackInFlightRef.current = true;
+    setIsFeedbackLoading(true);
+    setFeedbackError(null);
+
+    try {
+      const response = await fetch(apiUrl('/api/evaluate'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(45_000),
+        body: JSON.stringify({
+          submissionId: submission.submissionId,
+          question: {
+            title: problem.title,
+            description: problem.description,
+            inputFormat: problem.input,
+            outputFormat: problem.output,
+            constraints: problem.constraints,
+          },
+          code: codeForFeedback,
+          execution: submission.execution,
+          testCases: submission.testCases,
+        }),
+      });
+
+      if (!response.ok) {
+        let detail = `Gemini feedback failed (HTTP ${response.status}).`;
+        try {
+          const errorBody = await response.json();
+          detail = errorBody.detail || detail;
+        } catch {
+          // Keep the HTTP status message when the server response is not JSON.
+        }
+        throw new Error(detail);
+      }
+
+      const responseData: unknown = await response.json();
+      if (!isEvaluationResult(responseData)) {
+        throw new Error(
+          'Gemini returned incomplete detailed feedback. Your Java test results are preserved; retry AI feedback.'
+        );
+      }
+      const evaluationData = responseData;
+      setEvaluationResult(evaluationData);
+      if (evaluationData.totalScore >= 70 && submission.verdict !== 'accepted') {
+        onProblemAttempted(problem.id);
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error && error.name === 'TimeoutError'
+        ? 'Gemini feedback timed out. Your Java test results are saved; retry AI feedback without rerunning tests.'
+        : error instanceof Error
+          ? error.message
+          : 'Gemini feedback could not be generated. Your Java test results are saved.';
+      setFeedbackError(message);
+    } finally {
+      feedbackInFlightRef.current = false;
+      setIsFeedbackLoading(false);
+    }
+  };
+
+  // Java execution returns the authoritative verdict before Gemini feedback is requested.
   const handleSubmit = async () => {
+    if (submitInFlightRef.current) return;
     if (!code.trim()) {
       setCompilerError('Editor is empty. Please write your Java code before submitting.');
       setOutput('');
@@ -147,8 +281,14 @@ function CodingWorkspace({
       return;
     }
 
+    submitInFlightRef.current = true;
+    const codeAtSubmission = code;
     setIsSubmitting(true);
     setEvaluationError(null);
+    setFeedbackError(null);
+    setSubmissionResult(null);
+    setEvaluationResult(null);
+    setIsEvaluationOpen(false);
     setSubmitStep('Compiling Java solution and testing inputs...');
 
     const testCasesToRun = problem.testCases && problem.testCases.length > 0
@@ -156,72 +296,63 @@ function CodingWorkspace({
       : [{ input: problem.exampleInput || '', expected: problem.exampleOutput || '' }];
 
     try {
-      setSubmitStep('Compiling and executing test cases on JDK...');
+      const submissionResponse = await fetch(apiUrl('/api/submit'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(javaSubmissionTimeoutMs(testCasesToRun.length)),
+        body: JSON.stringify({
+          question: {
+            title: problem.title,
+            description: problem.description,
+            inputFormat: problem.input,
+            outputFormat: problem.output,
+            constraints: problem.constraints,
+          },
+          code: codeAtSubmission,
+          testCases: testCasesToRun.map((tc) => ({
+            input: tc.input,
+            expected: tc.expected,
+          })),
+        }),
+      });
 
-      let response: Response;
-      try {
-        response = await fetch(apiUrl('/api/submit'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            question: {
-              title: problem.title,
-              description: problem.description,
-              inputFormat: problem.input,
-              outputFormat: problem.output,
-              constraints: problem.constraints,
-            },
-            code: code,
-            testCases: testCasesToRun.map((tc) => ({
-              input: tc.input,
-              expected: tc.expected,
-            })),
-          }),
-        });
-      } catch {
-        throw new Error(
-          'Java execution server is unavailable.\n\nPlease start the backend server on port 8000 (uvicorn backend.main:app --port 8000).'
-        );
-      }
-
-      if (!response.ok) {
-        if (response.status === 502 || response.status === 503 || response.status === 504) {
-          throw new Error(
-            `Java backend service is currently unreachable (HTTP ${response.status} Bad Gateway).\n\nPlease ensure the backend server is running on port 8000.`
-          );
-        }
-
-        let errorDetail = `Submission evaluation failed (HTTP ${response.status}).`;
+      if (!submissionResponse.ok) {
+        let errorDetail = `Java test evaluation failed (HTTP ${submissionResponse.status}).`;
         try {
-          const errJson = await response.json();
+          const errJson = await submissionResponse.json();
           errorDetail = errJson.detail || errJson.message || errorDetail;
         } catch {
-          const rawText = await response.text();
+          const rawText = await submissionResponse.text();
           if (rawText) errorDetail = rawText;
         }
         throw new Error(errorDetail);
       }
 
-      setSubmitStep('Generating AI assessment and diagnostic feedback...');
-      const evaluationData: EvaluationResult = await response.json();
-      setEvaluationResult(evaluationData);
+      const submission: SubmissionResponse = await submissionResponse.json();
+      setSubmissionResult(submission);
+      setSubmittedCode(codeAtSubmission);
       setIsEvaluationOpen(true);
-
-      // Update problem status locally if all tests passed or high score
-      if (evaluationData.totalScore >= 70) {
+      if (submission.verdict === 'accepted') {
         onProblemAttempted(problem.id);
       }
+      setIsSubmitting(false);
+      await handleFeedback(submission, codeAtSubmission);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unknown error occurred during submission.';
+      const message = err instanceof Error && err.name === 'TimeoutError'
+        ? 'Java test execution timed out before the backend returned a verdict.'
+        : err instanceof Error
+          ? err.message
+          : 'An unknown error occurred during Java test execution.';
       setEvaluationError(message);
     } finally {
       setIsSubmitting(false);
       setSubmitStep('');
+      submitInFlightRef.current = false;
     }
   };
 
   const handleReset = () => {
-    setCode(problem.starterCode?.['Java'] || '');
+    setCode(initialCode);
     setOutput('');
     setCompilerError('');
     setActiveTab('input');
@@ -391,7 +522,7 @@ function CodingWorkspace({
               onSubmit={handleSubmit}
               onReset={handleReset}
               isRunning={isRunning}
-              isSubmitting={isSubmitting}
+              isSubmitting={isSubmitting || isFeedbackLoading}
               activeTab={activeTab}
               onTabChange={setActiveTab}
               customInput={customInput}
@@ -446,6 +577,12 @@ function CodingWorkspace({
       <EvaluationPanel
         visible={isEvaluationOpen}
         evaluation={evaluationResult}
+        verdict={submissionResult}
+        isFeedbackLoading={isFeedbackLoading}
+        feedbackError={feedbackError}
+        onRetryFeedback={() => {
+          if (submissionResult) void handleFeedback(submissionResult, submittedCode);
+        }}
         code={code}
         problemTitle={problem.title}
         onClose={() => setIsEvaluationOpen(false)}

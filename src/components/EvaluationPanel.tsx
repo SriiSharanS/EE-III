@@ -1,18 +1,108 @@
 import { useState } from 'react';
-import type { EvaluationResult } from '../types/problem';
+import type { EvaluationResult, SubmissionResponse } from '../types/problem';
 
 interface EvaluationPanelProps {
   visible: boolean;
   evaluation: EvaluationResult | null;
+  verdict: SubmissionResponse | null;
+  isFeedbackLoading: boolean;
+  feedbackError: string | null;
+  onRetryFeedback: () => void;
   code: string;
   problemTitle: string;
   onClose: () => void;
   onBack: () => void;
 }
 
+function FeedbackList({ title, items }: { title: string; items: string[] }) {
+  if (items.length === 0) return null;
+
+  return (
+    <div className="ai-insight-card suggestions-card">
+      <div className="insight-card-header">
+        <span>{title}</span>
+      </div>
+      <ul className="insight-list">
+        {items.map((item, index) => <li key={`${title}-${index}`}>{item}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+function DetailedFeedbackSections({
+  evaluation,
+  verdict,
+}: {
+  evaluation: EvaluationResult;
+  verdict: SubmissionResponse;
+}) {
+  const feedback = evaluation.detailedFeedback;
+
+  return (
+    <>
+      <div className="ai-insight-card summary-card">
+        <div className="insight-card-header"><span>Overall Assessment</span></div>
+        <p className="summary-text">{feedback.overallAssessment}</p>
+        <p className="summary-text">{feedback.verdictExplanation}</p>
+      </div>
+
+      <div className="ai-insight-card summary-card">
+        <div className="insight-card-header"><span>Correctness & Logic Analysis</span></div>
+        <p className="summary-text">{feedback.correctnessAnalysis}</p>
+      </div>
+
+      <div className="ai-insight-card issues-card">
+        <div className="insight-card-header"><span>Failed Test Explanations</span></div>
+        {verdict.testCasesTotal === 0 ? (
+          <p className="summary-text">No test-case evidence was provided.</p>
+        ) : feedback.failedTests.length === 0 ? (
+          <p className="summary-text">All {verdict.testCasesPassed} supplied test cases passed.</p>
+        ) : (
+          <ul className="insight-list">
+            {feedback.failedTests.map((test) => (
+              <li key={test.testCaseNumber}>
+                <strong>Test {test.testCaseNumber}</strong>
+                <div>Input: <code>{test.input || '(empty input)'}</code></div>
+                <div>Expected: <code>{test.expectedOutput || '(empty output)'}</code></div>
+                <div>Actual: <code>{test.actualOutput || '(empty output)'}</code></div>
+                <div>{test.explanation}</div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="ai-insight-card summary-card">
+        <div className="insight-card-header"><span>Time & Space Complexity</span></div>
+        <p className="summary-text">
+          Time: {evaluation.timeComplexity} — {feedback.timeComplexityReasoning}
+        </p>
+        <p className="summary-text">
+          Space: {evaluation.spaceComplexity} — {feedback.spaceComplexityReasoning}
+        </p>
+      </div>
+
+      <FeedbackList title="Code Quality Strengths" items={feedback.codeQualityStrengths} />
+      <FeedbackList title="Code Quality Improvements" items={feedback.codeQualityImprovements} />
+      <FeedbackList title="Specific Mistakes" items={feedback.specificMistakes} />
+      <FeedbackList title="Actionable Corrections" items={feedback.correctionGuidance} />
+      <FeedbackList title="Java Concepts to Review" items={feedback.javaConceptsToReview} />
+
+      <div className="ai-insight-card summary-card">
+        <div className="insight-card-header"><span>Follow-up Practice</span></div>
+        <p className="summary-text">{feedback.practiceRecommendation}</p>
+      </div>
+    </>
+  );
+}
+
 export default function EvaluationPanel({
   visible,
   evaluation,
+  verdict,
+  isFeedbackLoading,
+  feedbackError,
+  onRetryFeedback,
   code,
   problemTitle,
   onClose,
@@ -20,9 +110,12 @@ export default function EvaluationPanel({
 }: EvaluationPanelProps) {
   const [viewMode, setViewMode] = useState<'summary' | 'review'>('summary');
 
-  if (!visible || !evaluation) return null;
+  if (!visible || !verdict) return null;
 
-  const scorePercentage = Math.max(0, Math.min(100, evaluation.totalScore));
+  const scorePercentage = evaluation
+    ? Math.max(0, Math.min(100, evaluation.totalScore))
+    : 0;
+  const showSummaryView = viewMode === 'summary' || !evaluation;
   
   const getScoreBadgeClass = (score: number) => {
     if (score >= 90) return 'badge-success';
@@ -65,7 +158,7 @@ export default function EvaluationPanel({
         <div className="eval-view-toggle">
           <button
             type="button"
-            className={`eval-tab-btn ${viewMode === 'summary' ? 'active' : ''}`}
+            className={`eval-tab-btn ${showSummaryView ? 'active' : ''}`}
             onClick={() => setViewMode('summary')}
           >
             Evaluation Summary
@@ -74,12 +167,14 @@ export default function EvaluationPanel({
             type="button"
             className={`eval-tab-btn ${viewMode === 'review' ? 'active' : ''}`}
             onClick={() => setViewMode('review')}
+            disabled={!evaluation}
           >
             Review Code & Insights
           </button>
         </div>
 
-        {viewMode === 'summary' ? (
+        {showSummaryView ? (
+          evaluation ? (
           <div className="eval-scroll-content">
             {/* Total Score Block */}
             <div className="score-block">
@@ -162,6 +257,8 @@ export default function EvaluationPanel({
               </div>
             </div>
 
+            <DetailedFeedbackSections evaluation={evaluation} verdict={verdict} />
+
             {/* Summary Section */}
             {evaluation.summary && (
               <div className="ai-insight-card summary-card">
@@ -226,6 +323,53 @@ export default function EvaluationPanel({
               </div>
             )}
           </div>
+          ) : (
+            <div className="eval-scroll-content">
+              <div className="metrics-triplet">
+                <div className="metric-chip">
+                  <span className="metric-chip-label">Java Test Verdict</span>
+                  <span className="metric-chip-val">{verdict.verdict.replaceAll('_', ' ').toUpperCase()}</span>
+                </div>
+                <div className="metric-chip">
+                  <span className="metric-chip-label">Test Cases Passed</span>
+                  <span className="metric-chip-val">{verdict.testCasesPassed} / {verdict.testCasesTotal}</span>
+                </div>
+                <div className="metric-chip">
+                  <span className="metric-chip-label">Java Execution</span>
+                  <span className="metric-chip-val">{verdict.execution.status.replaceAll('_', ' ')}</span>
+                </div>
+              </div>
+
+              <div className="ai-insight-card summary-card">
+                <div className="insight-card-header">
+                  <span>Actual Test Results</span>
+                </div>
+                <ul className="insight-list">
+                  {verdict.testCases.map((testCase, index) => (
+                    <li key={index}>
+                      Test {index + 1}: {testCase.passed ? 'Passed' : 'Failed'}
+                      {!testCase.passed && testCase.actualOutput && ` — ${testCase.actualOutput.trim()}`}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="ai-insight-card summary-card" aria-live="polite">
+                <div className="insight-card-header">
+                  <span>Gemini AI Feedback</span>
+                </div>
+                {isFeedbackLoading && <p className="summary-text">Generating educational feedback. Your Java verdict is already available.</p>}
+                {feedbackError && (
+                  <>
+                    <p className="summary-text">{feedbackError}</p>
+                    <button type="button" className="btn btn-ghost" onClick={onRetryFeedback}>
+                      Retry AI Feedback
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )
         ) : (
           /* Code Review Mode */
           <div className="eval-scroll-content review-mode-content">
@@ -236,8 +380,10 @@ export default function EvaluationPanel({
               </pre>
             </div>
 
+            {evaluation && <DetailedFeedbackSections evaluation={evaluation} verdict={verdict} />}
+
             <div className="review-insights-split">
-              {evaluation.issues && evaluation.issues.length > 0 && (
+              {evaluation?.issues && evaluation.issues.length > 0 && (
                 <div className="ai-insight-card issues-card">
                   <div className="insight-card-header">
                     <span className="tag-error">Issues to Fix</span>
@@ -250,7 +396,7 @@ export default function EvaluationPanel({
                 </div>
               )}
 
-              {evaluation.suggestions && evaluation.suggestions.length > 0 && (
+              {evaluation?.suggestions && evaluation.suggestions.length > 0 && (
                 <div className="ai-insight-card suggestions-card">
                   <div className="insight-card-header">
                     <span className="tag-info">Recommended Improvements</span>
@@ -271,9 +417,9 @@ export default function EvaluationPanel({
           <button
             type="button"
             className="btn btn-ghost"
-            onClick={() => setViewMode(viewMode === 'summary' ? 'review' : 'summary')}
+            onClick={() => setViewMode(showSummaryView ? 'review' : 'summary')}
           >
-            {viewMode === 'summary' ? 'Review Code' : 'Back to Summary'}
+            {showSummaryView ? 'Review Code' : 'Back to Summary'}
           </button>
           <button
             type="button"

@@ -62,5 +62,44 @@ export interface EvaluationResult {
   suggestions: string[];
 
   summary: string;
+  detailedFeedback: {
+    overallAssessment: string;
+    verdictExplanation: string;
+    correctnessAnalysis: string;
+    failedTests: Array<{
+      testCaseNumber: number;
+      input: string;
+      expectedOutput: string;
+      actualOutput: string;
+      explanation: string;
+    }>;
+    timeComplexityReasoning: string;
+    spaceComplexityReasoning: string;
+    codeQualityStrengths: string[];
+    codeQualityImprovements: string[];
+    specificMistakes: string[];
+    correctionGuidance: string[];
+    javaConceptsToReview: string[];
+    practiceRecommendation: string;
+  };
 }
 
+export interface SubmissionResponse {
+  submissionId: string;
+  verdict: 'accepted' | 'wrong_answer' | 'compile_error' | 'runtime_error' | 'timeout';
+  execution: {
+    status: 'success' | 'compile_error' | 'runtime_error' | 'timeout';
+    stdout?: string;
+    stderr?: string;
+    compileError?: string;
+    executionTimeMs?: number;
+  };
+  testCases: Array<{
+    input: string;
+    expectedOutput: string;
+    actualOutput?: string;
+    passed: boolean;
+  }>;
+  testCasesPassed: number;
+  testCasesTotal: number;
+}
