@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createPortalSession } from '../auth';
+import { authenticatePortalUser } from '../auth';
 
 interface LoginLocationState {
   from?: string;
@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -29,9 +29,14 @@ export default function LoginPage() {
       return;
     }
 
-    createPortalSession(normalizedEmail, remember);
-    const state = location.state as LoginLocationState | null;
-    navigate(state?.from ?? '/assessment', { replace: true });
+    try {
+      await authenticatePortalUser(normalizedEmail, password, remember);
+      const state = location.state as LoginLocationState | null;
+      navigate(state?.from ?? '/assessment', { replace: true });
+    } catch (loginError) {
+      const message = loginError instanceof Error ? loginError.message : 'Unable to authenticate user.';
+      setError(message);
+    }
   };
 
   return (
@@ -164,6 +169,9 @@ export default function LoginPage() {
               </svg>
             </button>
 
+            <p className="login-terms">
+              Demo login: <strong>mockuser@codeassess.com</strong> / <strong>mockpass123</strong>
+            </p>
             <p className="login-terms">
               By continuing, you agree to the assessment integrity and privacy policies.
             </p>

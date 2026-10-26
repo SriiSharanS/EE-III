@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import sqlite3
 from pathlib import Path
 import re
 import shutil
@@ -103,6 +104,17 @@ class HealthResponse(BaseModel):
     java_version: str
 
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    success: bool
+    message: str
+    user: dict[str, str] | None = None
+
+
 class SubmissionResponse(BaseModel):
     submissionId: str
     verdict: Literal["accepted", "wrong_answer", "compile_error", "runtime_error", "timeout"]
@@ -162,6 +174,52 @@ def read_java_version(javac_executable: Optional[str]) -> str:
     version_output = (result.stdout or result.stderr).strip()
     match = re.search(r"(?:javac\s+)?([\d][\w.+-]*)", version_output)
     return f"JDK {match.group(1)}" if match else "Java"
+
+
+def get_auth_db_path() -> Path:
+    return backend_dir / "mock_auth.db"
+
+
+def init_auth_db() -> None:
+    db_path = get_auth_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL,
+                name TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute("DELETE FROM users")
+        conn.execute(
+            "INSERT INTO users (email, password, name) VALUES (?, ?, ?)",
+            ("mockuser@codeassess.com", "mockpass123", "Mock User"),
+        )
+        conn.commit()
+
+
+init_auth_db()
+
+
+def validate_login(email: str, password: str) -> Optional[dict[str, str]]:
+    normalized_email = email.strip().lower()
+    with sqlite3.connect(get_auth_db_path()) as conn:
+        conn.row_factory = sqlite3.Row
+        row = conn.execute(
+            "SELECT email, name, password FROM users WHERE LOWER(email) = ?",
+            (normalized_email,),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    if row["password"] != password:
+        return None
+
+    return {"email": row["email"], "name": row["name"]}
 
 
 def limit_output(value: str) -> str:
@@ -235,6 +293,23 @@ def health_check() -> HealthResponse:
         status="ok" if java_available else "degraded",
         java_available=java_available,
         java_version=read_java_version(javac_executable),
+    )
+
+
+@app.post("/api/auth/login", response_model=LoginResponse)
+def login_user(payload: LoginRequest) -> LoginResponse:
+    normalized_email = payload.email.strip().lower()
+    if not normalized_email or not payload.password:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email and password are required.")
+
+    user = validate_login(normalized_email, payload.password)
+    if user is None:
+        return LoginResponse(success=False, message="Invalid email or password.")
+
+    return LoginResponse(
+        success=True,
+        message="Authentication successful.",
+        user={"email": user["email"], "name": user["name"]},
     )
 
 

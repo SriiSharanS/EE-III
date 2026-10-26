@@ -251,6 +251,3226 @@
         "C": "#include <stdio.h>\n\nint fibonacci(int n) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\", fibonacci(n));\n    return 0;\n}",
         "C++": "#include <iostream>\nusing namespace std;\n\nint fibonacci(int n) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    cout << fibonacci(n);\n    return 0;\n}"
       }
+    },
+    {
+      "id": 9,
+      "number": 9,
+      "title": "A. Watermelon",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Watermelon. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 275\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "5\n10 11 1 2 3",
+          "expected": "27"
+        },
+        {
+          "input": "5\n10 13 3 6 9",
+          "expected": "41"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 10,
+      "number": 10,
+      "title": "A. Team",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Team. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 300\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "6\n11 1 2 3 4 5",
+          "expected": "26"
+        },
+        {
+          "input": "1\n11",
+          "expected": "11"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 11,
+      "number": 11,
+      "title": "A. Way Too Long Words",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Way Too Long Words. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 325\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "7\n1 2 3 4 5 6 7",
+          "expected": "28"
+        },
+        {
+          "input": "2\n12 2",
+          "expected": "14"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 12,
+      "number": 12,
+      "title": "A. Beautiful Matrix",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Beautiful Matrix. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 350\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "2\n2 3",
+          "expected": "5"
+        },
+        {
+          "input": "3\n13 3 6",
+          "expected": "22"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 13,
+      "number": 13,
+      "title": "A. Soldier and Bananas",
+      "difficulty": "Easy",
+      "topic": "Functions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Soldier and Bananas. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 375\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "3\n3 4 5",
+          "expected": "12"
+        },
+        {
+          "input": "4\n1 4 7 10",
+          "expected": "22"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 14,
+      "number": 14,
+      "title": "A. Wrong Subtraction",
+      "difficulty": "Easy",
+      "topic": "DSA",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Wrong Subtraction. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 400\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "4\n4 5 6 7",
+          "expected": "22"
+        },
+        {
+          "input": "5\n2 5 8 11 1",
+          "expected": "27"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 15,
+      "number": 15,
+      "title": "A. Bit++",
+      "difficulty": "Easy",
+      "topic": "Basics",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Bit++. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 425\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "5\n5 6 7 8 9",
+          "expected": "35"
+        },
+        {
+          "input": "1\n3",
+          "expected": "3"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 16,
+      "number": 16,
+      "title": "A. Tram",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Tram. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n17 7 14 4 11",
+      "exampleOutput": "53",
+      "constraints": "1 <= n <= 450\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n17 7 14 4 11",
+          "expected": "53"
+        },
+        {
+          "input": "6\n6 7 8 9 10 11",
+          "expected": "51"
+        },
+        {
+          "input": "2\n4 7",
+          "expected": "11"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 17,
+      "number": 17,
+      "title": "A. Domino Piling",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Domino Piling. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n1 8 15 5 12",
+      "exampleOutput": "41",
+      "constraints": "1 <= n <= 475\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n1 8 15 5 12",
+          "expected": "41"
+        },
+        {
+          "input": "7\n7 8 9 10 11 1 2",
+          "expected": "48"
+        },
+        {
+          "input": "3\n5 8 11",
+          "expected": "24"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 18,
+      "number": 18,
+      "title": "A. George and Accommodation",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. George and Accommodation. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n2 9 16 6 13",
+      "exampleOutput": "46",
+      "constraints": "1 <= n <= 500\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n2 9 16 6 13",
+          "expected": "46"
+        },
+        {
+          "input": "2\n8 9",
+          "expected": "17"
+        },
+        {
+          "input": "4\n6 9 12 2",
+          "expected": "29"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 19,
+      "number": 19,
+      "title": "A. Vanya and Fence",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Vanya and Fence. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n3 10 17 7 14",
+      "exampleOutput": "51",
+      "constraints": "1 <= n <= 525\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n3 10 17 7 14",
+          "expected": "51"
+        },
+        {
+          "input": "3\n9 10 11",
+          "expected": "30"
+        },
+        {
+          "input": "5\n7 10 13 3 6",
+          "expected": "39"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 20,
+      "number": 20,
+      "title": "A. Borze",
+      "difficulty": "Easy",
+      "topic": "Functions",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Borze. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n4 11 1 8 15",
+      "exampleOutput": "39",
+      "constraints": "1 <= n <= 550\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n4 11 1 8 15",
+          "expected": "39"
+        },
+        {
+          "input": "4\n10 11 1 2",
+          "expected": "24"
+        },
+        {
+          "input": "1\n8",
+          "expected": "8"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 21,
+      "number": 21,
+      "title": "A. Anton and Danik",
+      "difficulty": "Easy",
+      "topic": "DSA",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Anton and Danik. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n5 12 2 9 16",
+      "exampleOutput": "44",
+      "constraints": "1 <= n <= 575\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n5 12 2 9 16",
+          "expected": "44"
+        },
+        {
+          "input": "5\n11 1 2 3 4",
+          "expected": "21"
+        },
+        {
+          "input": "2\n9 12",
+          "expected": "21"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 22,
+      "number": 22,
+      "title": "A. Petya and Strings",
+      "difficulty": "Easy",
+      "topic": "Basics",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Petya and Strings. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n6 13 3 10 17",
+      "exampleOutput": "49",
+      "constraints": "1 <= n <= 600\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n6 13 3 10 17",
+          "expected": "49"
+        },
+        {
+          "input": "6\n1 2 3 4 5 6",
+          "expected": "21"
+        },
+        {
+          "input": "3\n10 13 3",
+          "expected": "26"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 23,
+      "number": 23,
+      "title": "A. IQ Test",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. IQ Test. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n7 14 4 11 1",
+      "exampleOutput": "37",
+      "constraints": "1 <= n <= 625\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n7 14 4 11 1",
+          "expected": "37"
+        },
+        {
+          "input": "7\n2 3 4 5 6 7 8",
+          "expected": "35"
+        },
+        {
+          "input": "4\n11 1 4 7",
+          "expected": "23"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 24,
+      "number": 24,
+      "title": "A. New Year and Hurry",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. New Year and Hurry. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n8 15 5 12 2",
+      "exampleOutput": "42",
+      "constraints": "1 <= n <= 650\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n8 15 5 12 2",
+          "expected": "42"
+        },
+        {
+          "input": "2\n3 4",
+          "expected": "7"
+        },
+        {
+          "input": "5\n12 2 5 8 11",
+          "expected": "38"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 25,
+      "number": 25,
+      "title": "A. Sum of Round Numbers",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Sum of Round Numbers. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n9 16 6 13 3",
+      "exampleOutput": "47",
+      "constraints": "1 <= n <= 675\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n9 16 6 13 3",
+          "expected": "47"
+        },
+        {
+          "input": "3\n4 5 6",
+          "expected": "15"
+        },
+        {
+          "input": "1\n13",
+          "expected": "13"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 26,
+      "number": 26,
+      "title": "A. Helpful Maths",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Helpful Maths. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 700\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "4\n5 6 7 8",
+          "expected": "26"
+        },
+        {
+          "input": "2\n1 4",
+          "expected": "5"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 27,
+      "number": 27,
+      "title": "A. String Task",
+      "difficulty": "Easy",
+      "topic": "Functions",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. String Task. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 725\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "5\n6 7 8 9 10",
+          "expected": "40"
+        },
+        {
+          "input": "3\n2 5 8",
+          "expected": "15"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 28,
+      "number": 28,
+      "title": "A. Football",
+      "difficulty": "Easy",
+      "topic": "DSA",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Football. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 750\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "6\n7 8 9 10 11 1",
+          "expected": "46"
+        },
+        {
+          "input": "4\n3 6 9 12",
+          "expected": "30"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 29,
+      "number": 29,
+      "title": "A. Candies",
+      "difficulty": "Easy",
+      "topic": "Basics",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Candies. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 775\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "7\n8 9 10 11 1 2 3",
+          "expected": "44"
+        },
+        {
+          "input": "5\n4 7 10 13 3",
+          "expected": "37"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 30,
+      "number": 30,
+      "title": "A. Pashmak and Garden",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Pashmak and Garden. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 800\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "2\n9 10",
+          "expected": "19"
+        },
+        {
+          "input": "1\n5",
+          "expected": "5"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 31,
+      "number": 31,
+      "title": "A. Lucky Division",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Lucky Division. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 825\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "3\n10 11 1",
+          "expected": "22"
+        },
+        {
+          "input": "2\n6 9",
+          "expected": "15"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 32,
+      "number": 32,
+      "title": "A. C+=",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. C+=. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 850\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "4\n11 1 2 3",
+          "expected": "17"
+        },
+        {
+          "input": "3\n7 10 13",
+          "expected": "30"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 33,
+      "number": 33,
+      "title": "A. Even Odds",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Even Odds. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n17 7 14 4 11",
+      "exampleOutput": "53",
+      "constraints": "1 <= n <= 875\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n17 7 14 4 11",
+          "expected": "53"
+        },
+        {
+          "input": "5\n1 2 3 4 5",
+          "expected": "15"
+        },
+        {
+          "input": "4\n8 11 1 4",
+          "expected": "24"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 34,
+      "number": 34,
+      "title": "A. Cheap Travel",
+      "difficulty": "Easy",
+      "topic": "Functions",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Cheap Travel. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n1 8 15 5 12",
+      "exampleOutput": "41",
+      "constraints": "1 <= n <= 900\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n1 8 15 5 12",
+          "expected": "41"
+        },
+        {
+          "input": "6\n2 3 4 5 6 7",
+          "expected": "27"
+        },
+        {
+          "input": "5\n9 12 2 5 8",
+          "expected": "36"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 35,
+      "number": 35,
+      "title": "A. Young Physicist",
+      "difficulty": "Easy",
+      "topic": "DSA",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Young Physicist. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n2 9 16 6 13",
+      "exampleOutput": "46",
+      "constraints": "1 <= n <= 925\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n2 9 16 6 13",
+          "expected": "46"
+        },
+        {
+          "input": "7\n3 4 5 6 7 8 9",
+          "expected": "42"
+        },
+        {
+          "input": "1\n10",
+          "expected": "10"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 36,
+      "number": 36,
+      "title": "A. Theatre Square",
+      "difficulty": "Easy",
+      "topic": "Basics",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Theatre Square. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n3 10 17 7 14",
+      "exampleOutput": "51",
+      "constraints": "1 <= n <= 950\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n3 10 17 7 14",
+          "expected": "51"
+        },
+        {
+          "input": "2\n4 5",
+          "expected": "9"
+        },
+        {
+          "input": "2\n11 1",
+          "expected": "12"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 37,
+      "number": 37,
+      "title": "A. Next Round",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Next Round. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n4 11 1 8 15",
+      "exampleOutput": "39",
+      "constraints": "1 <= n <= 975\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n4 11 1 8 15",
+          "expected": "39"
+        },
+        {
+          "input": "3\n5 6 7",
+          "expected": "18"
+        },
+        {
+          "input": "3\n12 2 5",
+          "expected": "19"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 38,
+      "number": 38,
+      "title": "A. Wizards and Demonstration",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Wizards and Demonstration. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n5 12 2 9 16",
+      "exampleOutput": "44",
+      "constraints": "1 <= n <= 1000\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n5 12 2 9 16",
+          "expected": "44"
+        },
+        {
+          "input": "4\n6 7 8 9",
+          "expected": "30"
+        },
+        {
+          "input": "4\n13 3 6 9",
+          "expected": "31"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 39,
+      "number": 39,
+      "title": "A. Sale",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Sale. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n6 13 3 10 17",
+      "exampleOutput": "49",
+      "constraints": "1 <= n <= 1025\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n6 13 3 10 17",
+          "expected": "49"
+        },
+        {
+          "input": "5\n7 8 9 10 11",
+          "expected": "45"
+        },
+        {
+          "input": "5\n1 4 7 10 13",
+          "expected": "35"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 40,
+      "number": 40,
+      "title": "A. Colorful Stones",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Colorful Stones. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n7 14 4 11 1",
+      "exampleOutput": "37",
+      "constraints": "1 <= n <= 1050\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n7 14 4 11 1",
+          "expected": "37"
+        },
+        {
+          "input": "6\n8 9 10 11 1 2",
+          "expected": "41"
+        },
+        {
+          "input": "1\n2",
+          "expected": "2"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 41,
+      "number": 41,
+      "title": "A. Puzzles",
+      "difficulty": "Easy",
+      "topic": "Functions",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Puzzles. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n8 15 5 12 2",
+      "exampleOutput": "42",
+      "constraints": "1 <= n <= 1075\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n8 15 5 12 2",
+          "expected": "42"
+        },
+        {
+          "input": "7\n9 10 11 1 2 3 4",
+          "expected": "40"
+        },
+        {
+          "input": "2\n3 6",
+          "expected": "9"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 42,
+      "number": 42,
+      "title": "A. Boring Apartments",
+      "difficulty": "Easy",
+      "topic": "DSA",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Boring Apartments. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n9 16 6 13 3",
+      "exampleOutput": "47",
+      "constraints": "1 <= n <= 1100\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n9 16 6 13 3",
+          "expected": "47"
+        },
+        {
+          "input": "2\n10 11",
+          "expected": "21"
+        },
+        {
+          "input": "3\n4 7 10",
+          "expected": "21"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 43,
+      "number": 43,
+      "title": "A. Divisibility Problem",
+      "difficulty": "Easy",
+      "topic": "Basics",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Divisibility Problem. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 1125\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "3\n11 1 2",
+          "expected": "14"
+        },
+        {
+          "input": "4\n5 8 11 1",
+          "expected": "25"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 44,
+      "number": 44,
+      "title": "A. Fox and Snake",
+      "difficulty": "Easy",
+      "topic": "Conditions",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Fox and Snake. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 1150\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "4\n1 2 3 4",
+          "expected": "10"
+        },
+        {
+          "input": "5\n6 9 12 2 5",
+          "expected": "34"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 45,
+      "number": 45,
+      "title": "A. Bestie",
+      "difficulty": "Easy",
+      "topic": "Loops",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Bestie. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 1175\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "5\n2 3 4 5 6",
+          "expected": "20"
+        },
+        {
+          "input": "1\n7",
+          "expected": "7"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 46,
+      "number": 46,
+      "title": "A. Odd Divisor",
+      "difficulty": "Medium",
+      "topic": "Arrays",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Odd Divisor. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 1200\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "6\n3 4 5 6 7 8",
+          "expected": "33"
+        },
+        {
+          "input": "2\n8 11",
+          "expected": "19"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 47,
+      "number": 47,
+      "title": "A. GCD Problem",
+      "difficulty": "Medium",
+      "topic": "Strings",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. GCD Problem. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 1225\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "7\n4 5 6 7 8 9 10",
+          "expected": "49"
+        },
+        {
+          "input": "3\n9 12 2",
+          "expected": "23"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 48,
+      "number": 48,
+      "title": "A. Chunga-Changa",
+      "difficulty": "Medium",
+      "topic": "Functions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Chunga-Changa. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 1250\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "2\n5 6",
+          "expected": "11"
+        },
+        {
+          "input": "4\n10 13 3 6",
+          "expected": "32"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 49,
+      "number": 49,
+      "title": "A. Level Statistics",
+      "difficulty": "Medium",
+      "topic": "DSA",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Level Statistics. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 1275\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "3\n6 7 8",
+          "expected": "21"
+        },
+        {
+          "input": "5\n11 1 4 7 10",
+          "expected": "33"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 50,
+      "number": 50,
+      "title": "A. Array Reordering",
+      "difficulty": "Medium",
+      "topic": "Basics",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Array Reordering. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n17 7 14 4 11",
+      "exampleOutput": "53",
+      "constraints": "1 <= n <= 1300\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n17 7 14 4 11",
+          "expected": "53"
+        },
+        {
+          "input": "4\n7 8 9 10",
+          "expected": "34"
+        },
+        {
+          "input": "1\n12",
+          "expected": "12"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 51,
+      "number": 51,
+      "title": "A. Fair Division",
+      "difficulty": "Medium",
+      "topic": "Conditions",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Fair Division. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n1 8 15 5 12",
+      "exampleOutput": "41",
+      "constraints": "1 <= n <= 1325\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n1 8 15 5 12",
+          "expected": "41"
+        },
+        {
+          "input": "5\n8 9 10 11 1",
+          "expected": "39"
+        },
+        {
+          "input": "2\n13 3",
+          "expected": "16"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 52,
+      "number": 52,
+      "title": "A. Reverse String",
+      "difficulty": "Medium",
+      "topic": "Loops",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Reverse String. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n2 9 16 6 13",
+      "exampleOutput": "46",
+      "constraints": "1 <= n <= 1350\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n2 9 16 6 13",
+          "expected": "46"
+        },
+        {
+          "input": "6\n9 10 11 1 2 3",
+          "expected": "36"
+        },
+        {
+          "input": "3\n1 4 7",
+          "expected": "12"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 53,
+      "number": 53,
+      "title": "A. Make It Increasing",
+      "difficulty": "Medium",
+      "topic": "Arrays",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Make It Increasing. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n3 10 17 7 14",
+      "exampleOutput": "51",
+      "constraints": "1 <= n <= 1375\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n3 10 17 7 14",
+          "expected": "51"
+        },
+        {
+          "input": "7\n10 11 1 2 3 4 5",
+          "expected": "36"
+        },
+        {
+          "input": "4\n2 5 8 11",
+          "expected": "26"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 54,
+      "number": 54,
+      "title": "A. Binary Search",
+      "difficulty": "Medium",
+      "topic": "Strings",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Binary Search. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n4 11 1 8 15",
+      "exampleOutput": "39",
+      "constraints": "1 <= n <= 1400\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n4 11 1 8 15",
+          "expected": "39"
+        },
+        {
+          "input": "2\n11 1",
+          "expected": "12"
+        },
+        {
+          "input": "5\n3 6 9 12 2",
+          "expected": "32"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 55,
+      "number": 55,
+      "title": "A. Make Product Equal",
+      "difficulty": "Medium",
+      "topic": "Functions",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Make Product Equal. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n5 12 2 9 16",
+      "exampleOutput": "44",
+      "constraints": "1 <= n <= 1425\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n5 12 2 9 16",
+          "expected": "44"
+        },
+        {
+          "input": "3\n1 2 3",
+          "expected": "6"
+        },
+        {
+          "input": "1\n4",
+          "expected": "4"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 56,
+      "number": 56,
+      "title": "A. Balanced Array",
+      "difficulty": "Medium",
+      "topic": "DSA",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Balanced Array. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n6 13 3 10 17",
+      "exampleOutput": "49",
+      "constraints": "1 <= n <= 1450\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n6 13 3 10 17",
+          "expected": "49"
+        },
+        {
+          "input": "4\n2 3 4 5",
+          "expected": "14"
+        },
+        {
+          "input": "2\n5 8",
+          "expected": "13"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 57,
+      "number": 57,
+      "title": "A. Missing Number",
+      "difficulty": "Medium",
+      "topic": "Basics",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Missing Number. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n7 14 4 11 1",
+      "exampleOutput": "37",
+      "constraints": "1 <= n <= 1475\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n7 14 4 11 1",
+          "expected": "37"
+        },
+        {
+          "input": "5\n3 4 5 6 7",
+          "expected": "25"
+        },
+        {
+          "input": "3\n6 9 12",
+          "expected": "27"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 58,
+      "number": 58,
+      "title": "A. Game 23",
+      "difficulty": "Medium",
+      "topic": "Conditions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Game 23. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n8 15 5 12 2",
+      "exampleOutput": "42",
+      "constraints": "1 <= n <= 1500\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n8 15 5 12 2",
+          "expected": "42"
+        },
+        {
+          "input": "6\n4 5 6 7 8 9",
+          "expected": "39"
+        },
+        {
+          "input": "4\n7 10 13 3",
+          "expected": "33"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 59,
+      "number": 59,
+      "title": "A. Good Number",
+      "difficulty": "Medium",
+      "topic": "Loops",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task A. Good Number. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n9 16 6 13 3",
+      "exampleOutput": "47",
+      "constraints": "1 <= n <= 1525\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n9 16 6 13 3",
+          "expected": "47"
+        },
+        {
+          "input": "7\n5 6 7 8 9 10 11",
+          "expected": "56"
+        },
+        {
+          "input": "5\n8 11 1 4 7",
+          "expected": "31"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 60,
+      "number": 60,
+      "title": "B. T-primes",
+      "difficulty": "Medium",
+      "topic": "Arrays",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task B. T-primes. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 1550\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "2\n6 7",
+          "expected": "13"
+        },
+        {
+          "input": "1\n9",
+          "expected": "9"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 61,
+      "number": 61,
+      "title": "B. Taxi",
+      "difficulty": "Medium",
+      "topic": "Strings",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Taxi. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 1575\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "3\n7 8 9",
+          "expected": "24"
+        },
+        {
+          "input": "2\n10 13",
+          "expected": "23"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 62,
+      "number": 62,
+      "title": "B. Sereja and Dima",
+      "difficulty": "Medium",
+      "topic": "Functions",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Sereja and Dima. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 1600\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "4\n8 9 10 11",
+          "expected": "38"
+        },
+        {
+          "input": "3\n11 1 4",
+          "expected": "16"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 63,
+      "number": 63,
+      "title": "B. Interesting Drink",
+      "difficulty": "Medium",
+      "topic": "DSA",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Interesting Drink. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 1625\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "5\n9 10 11 1 2",
+          "expected": "33"
+        },
+        {
+          "input": "4\n12 2 5 8",
+          "expected": "27"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 64,
+      "number": 64,
+      "title": "B. Books Exchange",
+      "difficulty": "Medium",
+      "topic": "Basics",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Books Exchange. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 1650\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "6\n10 11 1 2 3 4",
+          "expected": "31"
+        },
+        {
+          "input": "5\n13 3 6 9 12",
+          "expected": "43"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 65,
+      "number": 65,
+      "title": "B. Random Teams",
+      "difficulty": "Medium",
+      "topic": "Conditions",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Random Teams. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 1675\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "7\n11 1 2 3 4 5 6",
+          "expected": "32"
+        },
+        {
+          "input": "1\n1",
+          "expected": "1"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 66,
+      "number": 66,
+      "title": "B. Gift Fixing",
+      "difficulty": "Medium",
+      "topic": "Loops",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Gift Fixing. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 1700\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "2\n1 2",
+          "expected": "3"
+        },
+        {
+          "input": "2\n2 5",
+          "expected": "7"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 67,
+      "number": 67,
+      "title": "B. Levko and Table",
+      "difficulty": "Medium",
+      "topic": "Arrays",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Levko and Table. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n17 7 14 4 11",
+      "exampleOutput": "53",
+      "constraints": "1 <= n <= 1725\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n17 7 14 4 11",
+          "expected": "53"
+        },
+        {
+          "input": "3\n2 3 4",
+          "expected": "9"
+        },
+        {
+          "input": "3\n3 6 9",
+          "expected": "18"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 68,
+      "number": 68,
+      "title": "B. New Colony",
+      "difficulty": "Medium",
+      "topic": "Strings",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. New Colony. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n1 8 15 5 12",
+      "exampleOutput": "41",
+      "constraints": "1 <= n <= 1750\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n1 8 15 5 12",
+          "expected": "41"
+        },
+        {
+          "input": "4\n3 4 5 6",
+          "expected": "18"
+        },
+        {
+          "input": "4\n4 7 10 13",
+          "expected": "34"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 69,
+      "number": 69,
+      "title": "B. Remove Smallest",
+      "difficulty": "Medium",
+      "topic": "Functions",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Remove Smallest. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n2 9 16 6 13",
+      "exampleOutput": "46",
+      "constraints": "1 <= n <= 1775\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n2 9 16 6 13",
+          "expected": "46"
+        },
+        {
+          "input": "5\n4 5 6 7 8",
+          "expected": "30"
+        },
+        {
+          "input": "5\n5 8 11 1 4",
+          "expected": "29"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 70,
+      "number": 70,
+      "title": "B. Maximum Increase",
+      "difficulty": "Medium",
+      "topic": "DSA",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Maximum Increase. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n3 10 17 7 14",
+      "exampleOutput": "51",
+      "constraints": "1 <= n <= 1800\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n3 10 17 7 14",
+          "expected": "51"
+        },
+        {
+          "input": "6\n5 6 7 8 9 10",
+          "expected": "45"
+        },
+        {
+          "input": "1\n6",
+          "expected": "6"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 71,
+      "number": 71,
+      "title": "B. Bear and Big Brother",
+      "difficulty": "Medium",
+      "topic": "Basics",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Bear and Big Brother. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n4 11 1 8 15",
+      "exampleOutput": "39",
+      "constraints": "1 <= n <= 1825\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n4 11 1 8 15",
+          "expected": "39"
+        },
+        {
+          "input": "7\n6 7 8 9 10 11 1",
+          "expected": "52"
+        },
+        {
+          "input": "2\n7 10",
+          "expected": "17"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 72,
+      "number": 72,
+      "title": "B. Creating the Contest",
+      "difficulty": "Medium",
+      "topic": "Conditions",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Creating the Contest. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n5 12 2 9 16",
+      "exampleOutput": "44",
+      "constraints": "1 <= n <= 1850\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n5 12 2 9 16",
+          "expected": "44"
+        },
+        {
+          "input": "2\n7 8",
+          "expected": "15"
+        },
+        {
+          "input": "3\n8 11 1",
+          "expected": "20"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 73,
+      "number": 73,
+      "title": "B. Codeforces Subsequences",
+      "difficulty": "Medium",
+      "topic": "Loops",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Codeforces Subsequences. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n6 13 3 10 17",
+      "exampleOutput": "49",
+      "constraints": "1 <= n <= 1875\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n6 13 3 10 17",
+          "expected": "49"
+        },
+        {
+          "input": "3\n8 9 10",
+          "expected": "27"
+        },
+        {
+          "input": "4\n9 12 2 5",
+          "expected": "28"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 74,
+      "number": 74,
+      "title": "B. Number of Ways",
+      "difficulty": "Medium",
+      "topic": "Arrays",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Number of Ways. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n7 14 4 11 1",
+      "exampleOutput": "37",
+      "constraints": "1 <= n <= 1900\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n7 14 4 11 1",
+          "expected": "37"
+        },
+        {
+          "input": "4\n9 10 11 1",
+          "expected": "31"
+        },
+        {
+          "input": "5\n10 13 3 6 9",
+          "expected": "41"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 75,
+      "number": 75,
+      "title": "B. Balanced Remainders",
+      "difficulty": "Medium",
+      "topic": "Strings",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Balanced Remainders. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n8 15 5 12 2",
+      "exampleOutput": "42",
+      "constraints": "1 <= n <= 1925\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n8 15 5 12 2",
+          "expected": "42"
+        },
+        {
+          "input": "5\n10 11 1 2 3",
+          "expected": "27"
+        },
+        {
+          "input": "1\n11",
+          "expected": "11"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 76,
+      "number": 76,
+      "title": "B. Sequence with Digits",
+      "difficulty": "Medium",
+      "topic": "Functions",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Sequence with Digits. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n9 16 6 13 3",
+      "exampleOutput": "47",
+      "constraints": "1 <= n <= 1950\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n9 16 6 13 3",
+          "expected": "47"
+        },
+        {
+          "input": "6\n11 1 2 3 4 5",
+          "expected": "26"
+        },
+        {
+          "input": "2\n12 2",
+          "expected": "14"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 77,
+      "number": 77,
+      "title": "B. Longest Divisors",
+      "difficulty": "Medium",
+      "topic": "DSA",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Longest Divisors. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 1975\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "7\n1 2 3 4 5 6 7",
+          "expected": "28"
+        },
+        {
+          "input": "3\n13 3 6",
+          "expected": "22"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 78,
+      "number": 78,
+      "title": "B. Average Heap",
+      "difficulty": "Medium",
+      "topic": "Basics",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Average Heap. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 2000\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "2\n2 3",
+          "expected": "5"
+        },
+        {
+          "input": "4\n1 4 7 10",
+          "expected": "22"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 79,
+      "number": 79,
+      "title": "B. Social Network",
+      "difficulty": "Medium",
+      "topic": "Conditions",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Social Network. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 2025\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "3\n3 4 5",
+          "expected": "12"
+        },
+        {
+          "input": "5\n2 5 8 11 1",
+          "expected": "27"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 80,
+      "number": 80,
+      "title": "B. Prime Game",
+      "difficulty": "Medium",
+      "topic": "Loops",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Prime Game. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 2050\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "4\n4 5 6 7",
+          "expected": "22"
+        },
+        {
+          "input": "1\n3",
+          "expected": "3"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 81,
+      "number": 81,
+      "title": "B. Array and Operations",
+      "difficulty": "Hard",
+      "topic": "Arrays",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Array and Operations. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 2075\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "5\n5 6 7 8 9",
+          "expected": "35"
+        },
+        {
+          "input": "2\n4 7",
+          "expected": "11"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 82,
+      "number": 82,
+      "title": "B. OR in Matrix",
+      "difficulty": "Hard",
+      "topic": "Strings",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. OR in Matrix. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 2100\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "6\n6 7 8 9 10 11",
+          "expected": "51"
+        },
+        {
+          "input": "3\n5 8 11",
+          "expected": "24"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 83,
+      "number": 83,
+      "title": "B. Segment Tree",
+      "difficulty": "Hard",
+      "topic": "Functions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Segment Tree. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 2125\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "7\n7 8 9 10 11 1 2",
+          "expected": "48"
+        },
+        {
+          "input": "4\n6 9 12 2",
+          "expected": "29"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 84,
+      "number": 84,
+      "title": "B. Die Roll",
+      "difficulty": "Hard",
+      "topic": "DSA",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Die Roll. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n17 7 14 4 11",
+      "exampleOutput": "53",
+      "constraints": "1 <= n <= 2150\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n17 7 14 4 11",
+          "expected": "53"
+        },
+        {
+          "input": "2\n8 9",
+          "expected": "17"
+        },
+        {
+          "input": "5\n7 10 13 3 6",
+          "expected": "39"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 85,
+      "number": 85,
+      "title": "B. Again Twenty Five",
+      "difficulty": "Hard",
+      "topic": "Basics",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Again Twenty Five. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n1 8 15 5 12",
+      "exampleOutput": "41",
+      "constraints": "1 <= n <= 2175\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n1 8 15 5 12",
+          "expected": "41"
+        },
+        {
+          "input": "3\n9 10 11",
+          "expected": "30"
+        },
+        {
+          "input": "1\n8",
+          "expected": "8"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 86,
+      "number": 86,
+      "title": "B. Sort the Array",
+      "difficulty": "Hard",
+      "topic": "Conditions",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Sort the Array. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n2 9 16 6 13",
+      "exampleOutput": "46",
+      "constraints": "1 <= n <= 2200\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n2 9 16 6 13",
+          "expected": "46"
+        },
+        {
+          "input": "4\n10 11 1 2",
+          "expected": "24"
+        },
+        {
+          "input": "2\n9 12",
+          "expected": "21"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 87,
+      "number": 87,
+      "title": "B. Factor of Three",
+      "difficulty": "Hard",
+      "topic": "Loops",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Factor of Three. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n3 10 17 7 14",
+      "exampleOutput": "51",
+      "constraints": "1 <= n <= 2225\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n3 10 17 7 14",
+          "expected": "51"
+        },
+        {
+          "input": "5\n11 1 2 3 4",
+          "expected": "21"
+        },
+        {
+          "input": "3\n10 13 3",
+          "expected": "26"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 88,
+      "number": 88,
+      "title": "B. The Number of Positions",
+      "difficulty": "Hard",
+      "topic": "Arrays",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. The Number of Positions. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n4 11 1 8 15",
+      "exampleOutput": "39",
+      "constraints": "1 <= n <= 2250\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n4 11 1 8 15",
+          "expected": "39"
+        },
+        {
+          "input": "6\n1 2 3 4 5 6",
+          "expected": "21"
+        },
+        {
+          "input": "4\n11 1 4 7",
+          "expected": "23"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 89,
+      "number": 89,
+      "title": "B. Save More Mice",
+      "difficulty": "Hard",
+      "topic": "Strings",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Save More Mice. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n5 12 2 9 16",
+      "exampleOutput": "44",
+      "constraints": "1 <= n <= 2275\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n5 12 2 9 16",
+          "expected": "44"
+        },
+        {
+          "input": "7\n2 3 4 5 6 7 8",
+          "expected": "35"
+        },
+        {
+          "input": "5\n12 2 5 8 11",
+          "expected": "38"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 90,
+      "number": 90,
+      "title": "B. Subsequence Permutation",
+      "difficulty": "Hard",
+      "topic": "Functions",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Subsequence Permutation. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n6 13 3 10 17",
+      "exampleOutput": "49",
+      "constraints": "1 <= n <= 2300\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n6 13 3 10 17",
+          "expected": "49"
+        },
+        {
+          "input": "2\n3 4",
+          "expected": "7"
+        },
+        {
+          "input": "1\n13",
+          "expected": "13"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 91,
+      "number": 91,
+      "title": "B. Explosion",
+      "difficulty": "Hard",
+      "topic": "DSA",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Explosion. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n7 14 4 11 1",
+      "exampleOutput": "37",
+      "constraints": "1 <= n <= 2325\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n7 14 4 11 1",
+          "expected": "37"
+        },
+        {
+          "input": "3\n4 5 6",
+          "expected": "15"
+        },
+        {
+          "input": "2\n1 4",
+          "expected": "5"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 92,
+      "number": 92,
+      "title": "B. Hexadecimal",
+      "difficulty": "Hard",
+      "topic": "Basics",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Hexadecimal. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n8 15 5 12 2",
+      "exampleOutput": "42",
+      "constraints": "1 <= n <= 2350\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n8 15 5 12 2",
+          "expected": "42"
+        },
+        {
+          "input": "4\n5 6 7 8",
+          "expected": "26"
+        },
+        {
+          "input": "3\n2 5 8",
+          "expected": "15"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 93,
+      "number": 93,
+      "title": "B. Card Game",
+      "difficulty": "Hard",
+      "topic": "Conditions",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task B. Card Game. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n9 16 6 13 3",
+      "exampleOutput": "47",
+      "constraints": "1 <= n <= 2375\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n9 16 6 13 3",
+          "expected": "47"
+        },
+        {
+          "input": "5\n6 7 8 9 10",
+          "expected": "40"
+        },
+        {
+          "input": "4\n3 6 9 12",
+          "expected": "30"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 94,
+      "number": 94,
+      "title": "C. Longest Substring",
+      "difficulty": "Hard",
+      "topic": "Loops",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Longest Substring. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n10 17 7 14 4",
+      "exampleOutput": "52",
+      "constraints": "1 <= n <= 2400\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n10 17 7 14 4",
+          "expected": "52"
+        },
+        {
+          "input": "6\n7 8 9 10 11 1",
+          "expected": "46"
+        },
+        {
+          "input": "5\n4 7 10 13 3",
+          "expected": "37"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 95,
+      "number": 95,
+      "title": "C. Minimum Cost For Ticket",
+      "difficulty": "Hard",
+      "topic": "Arrays",
+      "marks": 40,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Minimum Cost For Ticket. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n11 1 8 15 5",
+      "exampleOutput": "40",
+      "constraints": "1 <= n <= 2425\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n11 1 8 15 5",
+          "expected": "40"
+        },
+        {
+          "input": "7\n8 9 10 11 1 2 3",
+          "expected": "44"
+        },
+        {
+          "input": "1\n5",
+          "expected": "5"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 96,
+      "number": 96,
+      "title": "C. Maximum Width",
+      "difficulty": "Hard",
+      "topic": "Strings",
+      "marks": 20,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Maximum Width. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n12 2 9 16 6",
+      "exampleOutput": "45",
+      "constraints": "1 <= n <= 2450\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n12 2 9 16 6",
+          "expected": "45"
+        },
+        {
+          "input": "2\n9 10",
+          "expected": "19"
+        },
+        {
+          "input": "2\n6 9",
+          "expected": "15"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 97,
+      "number": 97,
+      "title": "C. Distinct Split",
+      "difficulty": "Hard",
+      "topic": "Functions",
+      "marks": 25,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Distinct Split. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n13 3 10 17 7",
+      "exampleOutput": "50",
+      "constraints": "1 <= n <= 2475\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n13 3 10 17 7",
+          "expected": "50"
+        },
+        {
+          "input": "3\n10 11 1",
+          "expected": "22"
+        },
+        {
+          "input": "3\n7 10 13",
+          "expected": "30"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 98,
+      "number": 98,
+      "title": "C. Frog Jumps",
+      "difficulty": "Hard",
+      "topic": "DSA",
+      "marks": 30,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Frog Jumps. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n14 4 11 1 8",
+      "exampleOutput": "38",
+      "constraints": "1 <= n <= 2500\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n14 4 11 1 8",
+          "expected": "38"
+        },
+        {
+          "input": "4\n11 1 2 3",
+          "expected": "17"
+        },
+        {
+          "input": "4\n8 11 1 4",
+          "expected": "24"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 99,
+      "number": 99,
+      "title": "C. Special Permutation",
+      "difficulty": "Hard",
+      "topic": "Basics",
+      "marks": 35,
+      "status": "Not Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Special Permutation. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n15 5 12 2 9",
+      "exampleOutput": "43",
+      "constraints": "1 <= n <= 2525\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n15 5 12 2 9",
+          "expected": "43"
+        },
+        {
+          "input": "5\n1 2 3 4 5",
+          "expected": "15"
+        },
+        {
+          "input": "5\n9 12 2 5 8",
+          "expected": "36"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
+    },
+    {
+      "id": 100,
+      "number": 100,
+      "title": "C. Balanced Team",
+      "difficulty": "Hard",
+      "topic": "Conditions",
+      "marks": 40,
+      "status": "Attempted",
+      "description": "This problem is inspired by the Codeforces task C. Balanced Team. Read the statement carefully, apply the required algorithmic idea, and print the correct result in the exact format.",
+      "input": "The first line contains the number of elements or values.\nThe next lines contain the data needed for the task.",
+      "output": "Print the required result exactly as described in the problem statement.",
+      "exampleInput": "5\n16 6 13 3 10",
+      "exampleOutput": "48",
+      "constraints": "1 <= n <= 2550\n1 <= values <= 10^9",
+      "testCases": [
+        {
+          "input": "5\n16 6 13 3 10",
+          "expected": "48"
+        },
+        {
+          "input": "6\n2 3 4 5 6 7",
+          "expected": "27"
+        },
+        {
+          "input": "1\n10",
+          "expected": "10"
+        }
+      ],
+      "starterCode": {
+        "Python": "def solve():\n    # Write your code here\n    n = int(input())\n    values = list(map(int, input().split()))\n    print(sum(values))\n\nsolve()",
+        "Java": "import java.util.*;\n\npublic class Main {\n    public static void solve() {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += sc.nextInt();\n        }\n        System.out.println(sum);\n    }\n\n    public static void main(String[] args) {\n        solve();\n    }\n}",
+        "C": "#include <stdio.h>\n\nint main() {\n    int n, value, sum = 0;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &value);\n        sum += value;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "C++": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, value, sum = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> value;\n        sum += value;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      }
     }
   ]
 }

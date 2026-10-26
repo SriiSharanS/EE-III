@@ -6,6 +6,15 @@ export interface PortalSession {
   name: string;
 }
 
+interface LoginResponseData {
+  success: boolean;
+  message: string;
+  user?: {
+    email: string;
+    name: string;
+  } | null;
+}
+
 function readSession(storage: Storage, key: string): PortalSession | null {
   try {
     const value = storage.getItem(key);
@@ -31,14 +40,8 @@ export function getPortalSession(): PortalSession | null {
   );
 }
 
-export function createPortalSession(email: string, remember: boolean): PortalSession {
-  const localPart = email.split('@')[0] ?? 'Student';
-  const name = localPart
-    .split(/[._-]+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-  const session = { email, name: name || 'Student' };
+export function createPortalSession(email: string, name: string, remember: boolean): PortalSession {
+  const session = { email, name };
 
   clearPortalSession();
   const storage = remember ? window.localStorage : window.sessionStorage;
@@ -46,6 +49,27 @@ export function createPortalSession(email: string, remember: boolean): PortalSes
   storage.setItem(key, JSON.stringify(session));
 
   return session;
+}
+
+export async function authenticatePortalUser(
+  email: string,
+  password: string,
+  remember: boolean,
+): Promise<PortalSession> {
+  const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const payload = (await response.json()) as LoginResponseData;
+  if (!response.ok || !payload.success || !payload.user) {
+    throw new Error(payload.message || 'Authentication failed.');
+  }
+
+  return createPortalSession(payload.user.email, payload.user.name, remember);
 }
 
 export function clearPortalSession(): void {
