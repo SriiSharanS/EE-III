@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchProblems } from '../api';
 import FilterBar from '../components/FilterBar';
+import GlassButton, { ArrowRightIcon } from '../components/GlassButton';
 import Navbar from '../components/Navbar';
 import ProblemCard from '../components/ProblemCard';
 import type { Language, Problem, Topic } from '../types/problem';
@@ -72,10 +73,15 @@ export default function AssessmentPage({
         {/* Hero Section */}
         <section className="page-head assessment-hero">
           <div className="hero-copy">
-            {/* Pill Badge */}
+            <div className="hero-floating-card appear appear--scale" style={{ '--d': '0.15s' } as React.CSSProperties}>
+              <div className="hero-floating-label">[ CODEASSESS AI ]</div>
+              <h3>Built for Better Problem Solving</h3>
+              <p>Practice. Execute. Understand. Improve.</p>
+            </div>
+
             <div
               className="badge appear appear--pop"
-              style={{ '--d': '0.15s' } as React.CSSProperties}
+              style={{ '--d': '0.25s' } as React.CSSProperties}
             >
               <svg viewBox="0 0 24 24" className="badge-star" aria-hidden="true">
                 <path
@@ -83,43 +89,56 @@ export default function AssessmentPage({
                   fill="currentColor"
                 />
               </svg>
-              <span>Automated Java Assessment Engine</span>
+              <span>AI-POWERED CODING ASSESSMENT</span>
             </div>
 
-            {/* H1 Heading */}
             <h1 className="hero-h1">
               <span
                 className="headline-line appear appear--mask"
-                style={{ '--d': '0.3s' } as React.CSSProperties}
+                style={{ '--d': '0.38s' } as React.CSSProperties}
               >
-                Coding <em>Assessment</em> Workspace
+                MASTER DSA.<br />
+                <em>CODE WITH CONFIDENCE.</em>
               </span>
             </h1>
 
-            {/* Lede Subtitle */}
             <p
               className="lede appear appear--soft"
-              style={{ '--d': '0.45s' } as React.CSSProperties}
+              style={{ '--d': '0.52s' } as React.CSSProperties}
             >
-              Execute real Java code with direct JDK compilation, standard I/O stream processing, and diagnostic feedback.
+              Practice real coding problems, execute Java solutions, understand your mistakes with AI-powered feedback, and build your problem-solving skills one challenge at a time.
             </p>
+
+            <div className="hero-actions appear appear--btn" style={{ '--d': '0.62s' } as React.CSSProperties}>
+              <GlassButton
+                variant="primary"
+                size="lg"
+                className="continue-btn"
+                icon={<ArrowRightIcon />}
+                onClick={() => navigate('/code/1')}
+              >
+                START LEARNING
+              </GlassButton>
+              <GlassButton
+                variant="secondary"
+                size="lg"
+                className="secondary-cta"
+                onClick={() => navigate('/assessment')}
+              >
+                EXPLORE QUESTIONS
+              </GlassButton>
+            </div>
           </div>
 
-          {/* Hero Action */}
           <div
             className="hero-action-wrap appear appear--btn"
-            style={{ '--d': '0.55s' } as React.CSSProperties}
+            style={{ '--d': '0.7s' } as React.CSSProperties}
           >
-            <button
-              type="button"
-              className="btn btn-solid continue-btn"
-              onClick={() => navigate('/code/1')}
-            >
-              <span>Continue Coding</span>
-              <svg viewBox="0 0 24 24" className="btn-arrow-icon" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            <div className="hero-summary-panel">
+              <span className="hero-summary-kicker">Assessment engine</span>
+              <strong>Java + AI feedback</strong>
+              <p>Real compiler diagnostics and evaluation driven by the current app workflow.</p>
+            </div>
           </div>
         </section>
 
@@ -223,13 +242,13 @@ export default function AssessmentPage({
                 <tr>
                   <td colSpan={7} role="alert">
                     <p>Could not load problems: {loadError}</p>
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
+                    <GlassButton
+                      variant="secondary"
+                      size="md"
                       onClick={() => setRetryCount((count) => count + 1)}
                     >
                       Retry
-                    </button>
+                    </GlassButton>
                   </td>
                 </tr>
               ) : filteredProblems.length === 0 ? (

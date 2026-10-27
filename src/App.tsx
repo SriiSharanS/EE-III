@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { getPortalSession } from './auth';
+import CinematicBackground from './components/CinematicBackground';
 import AssessmentPage from './pages/AssessmentPage';
 import CodingPage from './pages/CodingPage';
 import LoginPage from './pages/LoginPage';
@@ -30,19 +31,7 @@ export default function App() {
 
   return (
     <>
-      <div className="video-background" aria-hidden="true">
-        <video
-          className="video-bg"
-          src="/videos/hf_20260818_072341_50851634-bbc3-4c33-9acc-7647d4db44aa.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          controls={false}
-        />
-        <div className="video-overlay" />
-      </div>
+      <CinematicBackground />
 
       <BrowserRouter>
         <Routes>

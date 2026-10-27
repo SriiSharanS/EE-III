@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { apiUrl, fetchProblem, javaSubmissionTimeoutMs } from '../api';
 import CodeEditor from '../components/CodeEditor';
 import EvaluationPanel from '../components/EvaluationPanel';
+import GlassButton, { ArrowRightIcon } from '../components/GlassButton';
 import Navbar from '../components/Navbar';
 import type { EvaluationResult, Problem, SubmissionResponse } from '../types/problem';
 
@@ -141,21 +142,23 @@ export default function CodingPage({
           </div>
           <div className="coding-header-meta">
             {loadError && hasValidId && (
-              <button
-                type="button"
-                className="btn btn-ghost"
+              <GlassButton
+                variant="secondary"
+                size="md"
                 onClick={() => setRetryCount((count) => count + 1)}
               >
                 Retry
-              </button>
+              </GlassButton>
             )}
-            <button
-              type="button"
-              className="btn btn-ghost back-to-list"
+            <GlassButton
+              variant="ghost"
+              size="md"
+              className="back-to-list"
+              icon={<ArrowRightIcon />}
               onClick={() => navigate('/assessment')}
             >
               Back to Problems
-            </button>
+            </GlassButton>
           </div>
         </section>
       </main>

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import GlassButton, { ArrowRightIcon } from './GlassButton';
 import type { Problem } from '../types/problem';
 
 interface ProblemCardProps {
@@ -40,16 +41,15 @@ export default function ProblemCard({ problem }: ProblemCardProps) {
         </span>
       </td>
       <td>
-        <button
-          type="button"
-          className="btn btn-ghost solve-button"
+        <GlassButton
+          variant="secondary"
+          size="sm"
+          className="solve-button"
+          icon={<ArrowRightIcon />}
           onClick={() => navigate(`/code/${problem.id}`)}
         >
-          <span>Solve</span>
-          <svg viewBox="0 0 24 24" className="solve-icon" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+          Solve
+        </GlassButton>
       </td>
     </tr>
   );

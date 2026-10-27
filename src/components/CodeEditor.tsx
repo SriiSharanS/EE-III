@@ -1,5 +1,6 @@
 import Editor, { type OnMount } from '@monaco-editor/react';
 import { useEffect, useRef, useState } from 'react';
+import GlassButton from './GlassButton';
 import type { Problem } from '../types/problem';
 
 interface CodeEditorProps {
@@ -117,30 +118,35 @@ export default function CodeEditor({
         </div>
 
         <div className="editor-actions">
-          <button
-            type="button"
+          <GlassButton
+            variant="secondary"
+            size="sm"
             className="editor-action reset"
             onClick={handleResetClick}
             disabled={isRunning || isSubmitting}
           >
             Reset
-          </button>
-          <button
-            type="button"
+          </GlassButton>
+          <GlassButton
+            variant="primary"
+            size="sm"
             className={`editor-action run ${isRunning ? 'loading' : ''}`}
             onClick={onRun}
             disabled={isRunning || isSubmitting}
+            loading={isRunning}
           >
             {isRunning ? 'Running...' : 'Run'}
-          </button>
-          <button
-            type="button"
+          </GlassButton>
+          <GlassButton
+            variant="primary"
+            size="sm"
             className={`editor-action submit ${isSubmitting ? 'loading' : ''}`}
             onClick={onSubmit}
             disabled={isRunning || isSubmitting}
+            loading={isSubmitting}
           >
             {isSubmitting ? 'Evaluating...' : 'Submit'}
-          </button>
+          </GlassButton>
         </div>
       </div>
 

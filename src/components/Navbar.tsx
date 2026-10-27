@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { apiUrl } from '../api';
 import { clearPortalSession, getPortalSession } from '../auth';
 
 const navItems = [
-  { label: 'Assessments', to: '/assessment' },
-  { label: 'Submissions', to: '/submissions' },
-  { label: 'Progress', to: '/progress' },
+  { label: 'Dashboard', to: '/assessment' },
+  { label: 'Practice Lab', to: '/assessment' },
+  { label: 'Portal', to: '/login' },
 ];
 
 export default function Navbar() {
@@ -136,10 +137,9 @@ export default function Navbar() {
           className={`mobile-burger ${mobileMenuOpen ? 'open' : ''}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
+          aria-expanded={mobileMenuOpen}
         >
-          <span className="burger-bar"></span>
-          <span className="burger-bar"></span>
-          <span className="burger-bar"></span>
+          {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
     </header>

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { authenticatePortalUser } from '../auth';
+import GlassButton, { ArrowRightIcon } from '../components/GlassButton';
 
 interface LoginLocationState {
   from?: string;
@@ -162,12 +163,9 @@ export default function LoginPage() {
 
             {error && <div className="login-error" role="alert">{error}</div>}
 
-            <button type="submit" className="login-submit">
-              <span>Enter assessment portal</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            <GlassButton type="submit" variant="primary" size="lg" className="login-submit" icon={<ArrowRightIcon />}>
+              Enter assessment portal
+            </GlassButton>
 
             <p className="login-terms">
               Demo login: <strong>mockuser@codeassess.com</strong> / <strong>mockpass123</strong>
