@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { authenticatePortalUser } from '../auth';
+import { authenticatePortalUser, registerPortalUser } from '../auth';
 import GlassButton, { ArrowRightIcon } from '../components/GlassButton';
 
 interface LoginLocationState {
@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,7 +32,8 @@ export default function LoginPage() {
     }
 
     try {
-      await authenticatePortalUser(normalizedEmail, password, remember);
+      const authenticate = isRegistering ? registerPortalUser : authenticatePortalUser;
+      await authenticate(normalizedEmail, password, remember);
       const state = location.state as LoginLocationState | null;
       navigate(state?.from ?? '/assessment', { replace: true });
     } catch (loginError) {
@@ -82,9 +84,13 @@ export default function LoginPage() {
         <div className="login-card-wrap appear appear--scale" style={{ '--d': '0.2s' } as React.CSSProperties}>
           <form className="login-card" onSubmit={handleSubmit} noValidate>
             <div className="login-card-heading">
-              <span className="login-card-kicker">Welcome back</span>
-              <h2>Sign in to your portal</h2>
-              <p>Use your registered email to continue your assessment.</p>
+              <span className="login-card-kicker">{isRegistering ? 'Create your account' : 'Welcome back'}</span>
+              <h2>{isRegistering ? 'Create your portal account' : 'Sign in to your portal'}</h2>
+              <p>
+                {isRegistering
+                  ? 'Register with any valid email and a password of your choice.'
+                  : 'Use your registered email to continue your assessment.'}
+              </p>
             </div>
 
             <div className="login-field">
@@ -131,8 +137,8 @@ export default function LoginPage() {
                   id="portal-password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="Enter your password"
+                  autoComplete={isRegistering ? 'new-password' : 'current-password'}
+                  placeholder={isRegistering ? 'Create a password' : 'Enter your password'}
                   value={password}
                   onChange={(event) => {
                     setPassword(event.target.value);
@@ -164,11 +170,21 @@ export default function LoginPage() {
             {error && <div className="login-error" role="alert">{error}</div>}
 
             <GlassButton type="submit" variant="primary" size="lg" className="login-submit" icon={<ArrowRightIcon />}>
-              Enter assessment portal
+              {isRegistering ? 'Create account' : 'Enter assessment portal'}
             </GlassButton>
 
-            <p className="login-terms">
-              Demo login: <strong>mockuser@codeassess.com</strong> / <strong>mockpass123</strong>
+            <p className="login-mode-switch">
+              {isRegistering ? 'Already have an account?' : 'New to CodeAssess?'}{' '}
+              <button
+                type="button"
+                className="login-text-button"
+                onClick={() => {
+                  setIsRegistering((registering) => !registering);
+                  setError('');
+                }}
+              >
+                {isRegistering ? 'Sign in' : 'Create account'}
+              </button>
             </p>
             <p className="login-terms">
               By continuing, you agree to the assessment integrity and privacy policies.

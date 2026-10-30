@@ -51,12 +51,13 @@ export function createPortalSession(email: string, name: string, remember: boole
   return session;
 }
 
-export async function authenticatePortalUser(
+async function submitPortalCredentials(
+  endpoint: 'login' | 'register',
   email: string,
   password: string,
   remember: boolean,
 ): Promise<PortalSession> {
-  const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+  const response = await fetch(`http://127.0.0.1:8000/api/auth/${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -70,6 +71,22 @@ export async function authenticatePortalUser(
   }
 
   return createPortalSession(payload.user.email, payload.user.name, remember);
+}
+
+export function authenticatePortalUser(
+  email: string,
+  password: string,
+  remember: boolean,
+): Promise<PortalSession> {
+  return submitPortalCredentials('login', email, password, remember);
+}
+
+export function registerPortalUser(
+  email: string,
+  password: string,
+  remember: boolean,
+): Promise<PortalSession> {
+  return submitPortalCredentials('register', email, password, remember);
 }
 
 export function clearPortalSession(): void {

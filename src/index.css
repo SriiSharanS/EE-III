@@ -2977,6 +2977,13 @@ body {
   margin-top: 22px;
 }
 
+.login-mode-switch {
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+  text-align: center;
+}
+
 .glass-button.login-submit {
   width: 100%;
   min-height: 51px;

@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import logging
 import os
+import hashlib
+import hmac
+import secrets
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 import re
 import shutil
@@ -64,6 +68,8 @@ RUN_TIMEOUT_SECONDS = min(30, max(1, int(os.environ.get("JAVA_RUN_TIMEOUT_SECOND
 MAX_SOURCE_CHARACTERS = 100_000
 MAX_INPUT_CHARACTERS = 100_000
 MAX_OUTPUT_CHARACTERS = 200_000
+PASSWORD_HASH_ITERATIONS = 310_000
+PASSWORD_HASH_PREFIX = "pbkdf2_sha256$"
 
 app.add_middleware(
     CORSMiddleware,
@@ -182,7 +188,7 @@ def get_auth_db_path() -> Path:
 
 def init_auth_db() -> None:
     db_path = get_auth_db_path()
-    with sqlite3.connect(db_path) as conn:
+    with closing(sqlite3.connect(db_path)) as conn, conn:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS users (
@@ -193,12 +199,57 @@ def init_auth_db() -> None:
             )
             """
         )
-        conn.execute("DELETE FROM users")
         conn.execute(
-            "INSERT INTO users (email, password, name) VALUES (?, ?, ?)",
-            ("mockuser@codeassess.com", "mockpass123", "Mock User"),
+            "INSERT OR IGNORE INTO users (email, password, name) VALUES (?, ?, ?)",
+            ("mockuser@codeassess.com", hash_password("mockpass123"), "Mock User"),
         )
         conn.commit()
+
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        PASSWORD_HASH_ITERATIONS,
+    )
+    return f"{PASSWORD_HASH_PREFIX}{PASSWORD_HASH_ITERATIONS}${salt.hex()}${digest.hex()}"
+
+
+def verify_password(password: str, stored_password: str) -> bool:
+    if not stored_password.startswith(PASSWORD_HASH_PREFIX):
+        return hmac.compare_digest(stored_password.encode("utf-8"), password.encode("utf-8"))
+
+    try:
+        algorithm, iterations, salt_hex, digest_hex = stored_password.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        expected_digest = bytes.fromhex(digest_hex)
+        actual_digest = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            bytes.fromhex(salt_hex),
+            int(iterations),
+        )
+    except (ValueError, TypeError):
+        return False
+
+    return hmac.compare_digest(actual_digest, expected_digest)
+
+
+def create_portal_user(email: str, password: str) -> Optional[dict[str, str]]:
+    name = re.sub(r"[._-]+", " ", email.split("@", 1)[0]).title()
+    try:
+        with closing(sqlite3.connect(get_auth_db_path())) as conn, conn:
+            conn.execute(
+                "INSERT INTO users (email, password, name) VALUES (?, ?, ?)",
+                (email, hash_password(password), name),
+            )
+    except sqlite3.IntegrityError:
+        return None
+
+    return {"email": email, "name": name}
 
 
 init_auth_db()
@@ -206,7 +257,7 @@ init_auth_db()
 
 def validate_login(email: str, password: str) -> Optional[dict[str, str]]:
     normalized_email = email.strip().lower()
-    with sqlite3.connect(get_auth_db_path()) as conn:
+    with closing(sqlite3.connect(get_auth_db_path())) as conn, conn:
         conn.row_factory = sqlite3.Row
         row = conn.execute(
             "SELECT email, name, password FROM users WHERE LOWER(email) = ?",
@@ -216,8 +267,16 @@ def validate_login(email: str, password: str) -> Optional[dict[str, str]]:
     if row is None:
         return None
 
-    if row["password"] != password:
+    stored_password = row["password"]
+    if not verify_password(password, stored_password):
         return None
+
+    if not stored_password.startswith(PASSWORD_HASH_PREFIX):
+        with closing(sqlite3.connect(get_auth_db_path())) as conn, conn:
+            conn.execute(
+                "UPDATE users SET password = ? WHERE LOWER(email) = ?",
+                (hash_password(password), normalized_email),
+            )
 
     return {"email": row["email"], "name": row["name"]}
 
@@ -310,6 +369,28 @@ def login_user(payload: LoginRequest) -> LoginResponse:
         success=True,
         message="Authentication successful.",
         user={"email": user["email"], "name": user["name"]},
+    )
+
+
+@app.post("/api/auth/register", response_model=LoginResponse)
+def register_user(payload: LoginRequest) -> LoginResponse:
+    normalized_email = payload.email.strip().lower()
+    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", normalized_email):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enter a valid email address.")
+    if len(payload.password) < 6:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must contain at least 6 characters.",
+        )
+
+    user = create_portal_user(normalized_email, payload.password)
+    if user is None:
+        return LoginResponse(success=False, message="An account with this email already exists.")
+
+    return LoginResponse(
+        success=True,
+        message="Account created successfully.",
+        user=user,
     )
 
 
