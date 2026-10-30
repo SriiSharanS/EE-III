@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { authenticatePortalUser, registerPortalUser } from '../auth';
+import { createPortalSession } from '../auth';
 import GlassButton, { ArrowRightIcon } from '../components/GlassButton';
 
 interface LoginLocationState {
@@ -13,33 +13,22 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
-  const [isRegistering, setIsRegistering] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      setError('Enter a valid email address.');
+    if (!normalizedEmail || !password) {
+      setError('Enter any email and password to continue.');
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must contain at least 6 characters.');
-      return;
-    }
-
-    try {
-      const authenticate = isRegistering ? registerPortalUser : authenticatePortalUser;
-      await authenticate(normalizedEmail, password, remember);
-      const state = location.state as LoginLocationState | null;
-      navigate(state?.from ?? '/assessment', { replace: true });
-    } catch (loginError) {
-      const message = loginError instanceof Error ? loginError.message : 'Unable to authenticate user.';
-      setError(message);
-    }
+    const name = normalizedEmail.split('@')[0] || 'Guest';
+    createPortalSession(normalizedEmail, name, remember);
+    const state = location.state as LoginLocationState | null;
+    navigate(state?.from ?? '/assessment', { replace: true });
   };
 
   return (
@@ -77,20 +66,16 @@ export default function LoginPage() {
           <div className="login-proof" aria-label="Portal features">
             <span><i />JDK 17 execution</span>
             <span><i />Real compiler output</span>
-            <span><i />Secure session access</span>
+            <span><i />Demo access</span>
           </div>
         </div>
 
         <div className="login-card-wrap appear appear--scale" style={{ '--d': '0.2s' } as React.CSSProperties}>
           <form className="login-card" onSubmit={handleSubmit} noValidate>
             <div className="login-card-heading">
-              <span className="login-card-kicker">{isRegistering ? 'Create your account' : 'Welcome back'}</span>
-              <h2>{isRegistering ? 'Create your portal account' : 'Sign in to your portal'}</h2>
-              <p>
-                {isRegistering
-                  ? 'Register with any valid email and a password of your choice.'
-                  : 'Use your registered email to continue your assessment.'}
-              </p>
+              <span className="login-card-kicker">Demo access</span>
+              <h2>Enter the assessment portal</h2>
+              <p>Use any email and password. No account is checked or created.</p>
             </div>
 
             <div className="login-field">
@@ -102,9 +87,9 @@ export default function LoginPage() {
                 <input
                   id="portal-email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
-                  placeholder="you@university.edu"
+                  placeholder="Enter any email"
                   value={email}
                   onChange={(event) => {
                     setEmail(event.target.value);
@@ -120,13 +105,6 @@ export default function LoginPage() {
             <div className="login-field">
               <div className="login-label-row">
                 <label htmlFor="portal-password">Password</label>
-                <button
-                  type="button"
-                  className="login-text-button"
-                  onClick={() => setError('Contact your assessment administrator to reset your password.')}
-                >
-                  Forgot password?
-                </button>
               </div>
               <div className="login-input-wrap">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -137,8 +115,8 @@ export default function LoginPage() {
                   id="portal-password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  autoComplete={isRegistering ? 'new-password' : 'current-password'}
-                  placeholder={isRegistering ? 'Create a password' : 'Enter your password'}
+                  autoComplete="current-password"
+                  placeholder="Enter any password"
                   value={password}
                   onChange={(event) => {
                     setPassword(event.target.value);
@@ -170,24 +148,11 @@ export default function LoginPage() {
             {error && <div className="login-error" role="alert">{error}</div>}
 
             <GlassButton type="submit" variant="primary" size="lg" className="login-submit" icon={<ArrowRightIcon />}>
-              {isRegistering ? 'Create account' : 'Enter assessment portal'}
+              Enter assessment portal
             </GlassButton>
 
-            <p className="login-mode-switch">
-              {isRegistering ? 'Already have an account?' : 'New to CodeAssess?'}{' '}
-              <button
-                type="button"
-                className="login-text-button"
-                onClick={() => {
-                  setIsRegistering((registering) => !registering);
-                  setError('');
-                }}
-              >
-                {isRegistering ? 'Sign in' : 'Create account'}
-              </button>
-            </p>
             <p className="login-terms">
-              By continuing, you agree to the assessment integrity and privacy policies.
+              Demo mode only. This does not verify your identity or protect assessment data.
             </p>
           </form>
         </div>

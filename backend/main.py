@@ -70,6 +70,11 @@ MAX_INPUT_CHARACTERS = 100_000
 MAX_OUTPUT_CHARACTERS = 200_000
 PASSWORD_HASH_ITERATIONS = 310_000
 PASSWORD_HASH_PREFIX = "pbkdf2_sha256$"
+configured_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -84,6 +89,7 @@ app.add_middleware(
         "http://127.0.0.1:5175",
         "http://localhost:8080",
         "http://127.0.0.1:8080",
+        *configured_origins,
     ],
     allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,

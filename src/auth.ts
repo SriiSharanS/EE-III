@@ -1,3 +1,5 @@
+import { apiUrl } from './api';
+
 const persistentSessionKey = 'codeassess.portal.session';
 const temporarySessionKey = 'codeassess.portal.temporary-session';
 
@@ -57,7 +59,7 @@ async function submitPortalCredentials(
   password: string,
   remember: boolean,
 ): Promise<PortalSession> {
-  const response = await fetch(`http://127.0.0.1:8000/api/auth/${endpoint}`, {
+  const response = await fetch(apiUrl(`/api/auth/${endpoint}`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
