@@ -5,6 +5,7 @@ import CinematicBackground from './components/CinematicBackground';
 import AssessmentPage from './pages/AssessmentPage';
 import CodingPage from './pages/CodingPage';
 import LoginPage from './pages/LoginPage';
+import QuestionsPage from './pages/QuestionsPage';
 
 function RequirePortalSession() {
   const location = useLocation();
@@ -43,7 +44,11 @@ export default function App() {
           <Route element={<RequirePortalSession />}>
             <Route
               path="/assessment"
-              element={<AssessmentPage attemptedProblemIds={attemptedProblemIds} />}
+              element={<AssessmentPage />}
+            />
+            <Route
+              path="/questions"
+              element={<QuestionsPage attemptedProblemIds={attemptedProblemIds} />}
             />
             <Route
               path="/code/:id"

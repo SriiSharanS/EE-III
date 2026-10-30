@@ -15,7 +15,10 @@ export default function ProblemCard({ problem }: ProblemCardProps) {
         <span className="number-pill">#{String(problem.number).padStart(2, '0')}</span>
       </td>
       <td className="problem-title-cell">
-        <span className="problem-title" onClick={() => navigate(`/code/${problem.id}`)}>
+        <span
+          className="problem-title"
+          onClick={() => navigate(`/code/${problem.id}`, { state: { from: '/questions' } })}
+        >
           {problem.title}
         </span>
       </td>
@@ -46,7 +49,7 @@ export default function ProblemCard({ problem }: ProblemCardProps) {
           size="sm"
           className="solve-button"
           icon={<ArrowRightIcon />}
-          onClick={() => navigate(`/code/${problem.id}`)}
+          onClick={() => navigate(`/code/${problem.id}`, { state: { from: '/questions' } })}
         >
           Solve
         </GlassButton>

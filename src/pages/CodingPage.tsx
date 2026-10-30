@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiUrl, fetchProblem, javaSubmissionTimeoutMs } from '../api';
 import CodeEditor from '../components/CodeEditor';
 import EvaluationPanel from '../components/EvaluationPanel';
@@ -79,7 +79,10 @@ export default function CodingPage({
   onProblemAttempted: (problemId: number) => void;
 }) {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  const locationState = location.state as { from?: string } | null;
+  const returnPath = locationState?.from === '/questions' ? '/questions' : '/assessment';
   const problemId = Number(id);
   const hasValidId = Number.isSafeInteger(problemId) && problemId > 0;
   const [retryCount, setRetryCount] = useState(0);
@@ -126,6 +129,7 @@ export default function CodingPage({
       key={matchingProblem.id}
       problem={matchingProblem}
       onProblemAttempted={onProblemAttempted}
+      returnPath={returnPath}
     />
   ) : (
     <div className="app-shell">
@@ -155,7 +159,7 @@ export default function CodingPage({
               size="md"
               className="back-to-list"
               icon={<ArrowRightIcon />}
-              onClick={() => navigate('/assessment')}
+              onClick={() => navigate(returnPath)}
             >
               Back to Problems
             </GlassButton>
@@ -169,9 +173,11 @@ export default function CodingPage({
 function CodingWorkspace({
   problem,
   onProblemAttempted,
+  returnPath,
 }: {
   problem: Problem;
   onProblemAttempted: (problemId: number) => void;
+  returnPath: string;
 }) {
   const navigate = useNavigate();
   const initialCode = '';
@@ -458,7 +464,7 @@ function CodingWorkspace({
             <button
               type="button"
               className="btn btn-ghost back-to-list"
-              onClick={() => navigate('/assessment')}
+              onClick={() => navigate(returnPath)}
             >
               <svg viewBox="0 0 24 24" className="btn-back-icon" aria-hidden="true">
                 <path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -656,7 +662,7 @@ function CodingWorkspace({
         onClose={() => setIsEvaluationOpen(false)}
         onBack={() => {
           setIsEvaluationOpen(false);
-          navigate('/assessment');
+          navigate(returnPath);
         }}
       />
     </div>
